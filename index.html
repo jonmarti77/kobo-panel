@@ -4,67 +4,73 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="mobile-web-app-capable" content="yes">
 <title>KOBO Panadería</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 :root{
-  --a50:#FAEEDA;--a100:#FAC775;--a200:#EF9F27;--a400:#BA7517;--a600:#854F0B;--a800:#633806;
-  --t50:#E1F5EE;--t400:#1D9E75;--t600:#0F6E56;
+  --a50:#FAEEDA;--a100:#FAC775;--a200:#EF9F27;--a400:#BA7517;--a600:#854F0B;
   --b50:#E6F1FB;--b200:#85B7EB;--b400:#378ADD;--b600:#185FA5;--b800:#0C447C;
   --g50:#EAF3DE;--g400:#639922;--g800:#27500A;
   --p50:#EEEDFE;--p400:#7F77DD;--p600:#534AB7;
   --r50:#FCEBEB;--r400:#E24B4A;--r800:#791F1F;
-  --gr50:#F1EFE8;--gr100:#D3D1C7;--gr400:#888780;--gr600:#5F5E5A;
-  --bg:#ffffff;--bg2:#f5f5f3;--bg3:#eeede9;
+  --gr50:#F1EFE8;--gr400:#888780;--gr600:#5F5E5A;
+  --t50:#E1F5EE;--t400:#1D9E75;--t600:#0F6E56;
+  --bg:#fff;--bg2:#f5f5f3;--bg3:#eee;
   --text:#1a1a1a;--text2:#666;--text3:#999;
   --border:rgba(0,0,0,0.1);--border2:rgba(0,0,0,0.18);
-  --radius:12px;--radius-sm:8px;
+  --rad:12px;--rad-sm:8px;
 }
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg2);color:var(--text);min-height:100vh;padding-bottom:80px;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg2);color:var(--text);min-height:100vh;padding-bottom:72px;}
 
 /* Loading */
 #loading{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;gap:12px;}
-#loading h2{font-size:20px;font-weight:600;color:var(--a400);}
+#loading h2{font-size:22px;font-weight:700;color:var(--a400);}
 #loading p{font-size:14px;color:var(--text2);}
 .spinner{width:36px;height:36px;border:3px solid var(--a50);border-top-color:var(--a400);border-radius:50%;animation:spin .8s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
 
 /* Header */
-.header{background:var(--bg);border-bottom:0.5px solid var(--border);padding:14px 16px;position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;}
-.brand{font-size:20px;font-weight:700;letter-spacing:.05em;color:var(--text);}
-.brand span{color:var(--a400);}
-.header-date{font-size:12px;color:var(--text2);}
+.hdr{background:var(--bg);border-bottom:0.5px solid var(--border);padding:12px 16px;position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:10px;}
+.hdr-back{background:none;border:none;font-size:20px;cursor:pointer;color:var(--text2);padding:0 4px;}
+.hdr-title{font-size:18px;font-weight:700;flex:1;}
+.hdr-title span{color:var(--a400);}
+.hdr-date{font-size:12px;color:var(--text2);}
 
 /* Bottom nav */
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--bg);border-top:0.5px solid var(--border);display:flex;z-index:50;}
-.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 4px;border:none;background:transparent;cursor:pointer;gap:4px;color:var(--text3);font-size:10px;transition:color .15s;}
-.nav-btn.active{color:var(--a400);}
-.nav-icon{font-size:20px;line-height:1;}
+.bnav{position:fixed;bottom:0;left:0;right:0;background:var(--bg);border-top:0.5px solid var(--border);display:flex;z-index:50;}
+.nb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px;border:none;background:transparent;cursor:pointer;gap:3px;color:var(--text3);font-size:10px;}
+.nb.active{color:var(--a400);}
+.nb-icon{font-size:22px;line-height:1;}
 
-/* Panels */
-.panel{display:none;padding:16px;}
-.panel.active{display:block;}
+/* Screens */
+.screen{display:none;padding:14px 16px;}
+.screen.active{display:block;}
 
 /* Stats */
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;}
-.stat{background:var(--bg);border-radius:var(--radius-sm);padding:12px;border:0.5px solid var(--border);}
-.stat-lbl{font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;}
-.stat-val{font-size:24px;font-weight:600;color:var(--text);}
-.stat-sub{font-size:11px;color:var(--text3);margin-top:2px;}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+.stat{background:var(--bg);border-radius:var(--rad-sm);padding:12px;border:0.5px solid var(--border);}
+.stat-lbl{font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px;}
+.stat-val{font-size:24px;font-weight:700;color:var(--text);}
+.stat-sub{font-size:11px;color:var(--text3);margin-top:1px;}
 
-/* Section header */
+/* Sec header */
 .sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
 .sec-title{font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.07em;}
-.btn-new{font-size:13px;padding:7px 14px;border-radius:20px;border:none;background:var(--a400);color:white;cursor:pointer;font-weight:500;}
+.btn-new{font-size:13px;padding:7px 16px;border-radius:20px;border:none;background:var(--a400);color:#fff;cursor:pointer;font-weight:500;}
 
-/* Filter chips */
+/* Search */
+.search-wrap{position:relative;margin-bottom:12px;}
+.search-wrap input{width:100%;padding:10px 12px 10px 36px;border:1px solid var(--border2);border-radius:var(--rad-sm);font-size:14px;background:var(--bg);color:var(--text);}
+.search-icon{position:absolute;left:11px;top:50%;transform:translateY(-50%);font-size:16px;color:var(--text3);}
+
+/* Chips */
 .chips{display:flex;gap:6px;margin-bottom:12px;overflow-x:auto;padding-bottom:2px;}
 .chip{font-size:12px;padding:5px 12px;border-radius:20px;border:0.5px solid var(--border2);background:var(--bg);color:var(--text2);cursor:pointer;white-space:nowrap;}
-.chip.active{background:var(--a400);color:white;border-color:var(--a400);}
+.chip.active{background:var(--a400);color:#fff;border-color:var(--a400);}
 
 /* Cards */
-.card{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:10px;}
+.card{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--rad);padding:14px;margin-bottom:10px;cursor:pointer;}
+.card:active{opacity:.85;}
 .card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px;}
 .card-name{font-size:15px;font-weight:600;color:var(--text);}
 .card-sub{font-size:11px;color:var(--text3);margin-top:2px;}
@@ -77,85 +83,95 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .b-part{background:var(--a50);color:var(--a600);}
 .b-prof{background:var(--b50);color:var(--b600);}
 .b-alb{background:var(--p50);color:var(--p600);}
-.price-lbl{font-size:15px;font-weight:600;color:var(--text);}
+.price-lbl{font-size:15px;font-weight:600;}
 .time-lbl{font-size:12px;color:var(--text3);}
 .empty{text-align:center;padding:3rem 1rem;color:var(--text2);font-size:14px;}
 
-/* Client card */
-.client-card{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:10px;}
-.client-top{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
-.avatar{width:40px;height:40px;border-radius:50%;background:var(--b50);color:var(--b800);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;flex-shrink:0;}
-.client-rows{border-top:0.5px solid var(--border);padding-top:10px;display:grid;gap:5px;}
-.client-row{display:flex;justify-content:space-between;font-size:13px;}
-.client-row span:first-child{color:var(--text2);}
-.client-row span:last-child{font-weight:500;color:var(--text);text-align:right;max-width:60%;}
-.pend-strip{display:flex;align-items:center;justify-content:space-between;background:var(--p50);border-radius:var(--radius-sm);padding:9px 12px;margin-top:10px;}
-.pend-strip span{font-size:13px;color:var(--p600);font-weight:500;}
-.pend-btn{font-size:12px;padding:4px 12px;border-radius:20px;border:1px solid var(--p600);background:transparent;color:var(--p600);cursor:pointer;}
+/* Client detail */
+.detail-section{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--rad);padding:14px;margin-bottom:10px;}
+.detail-section h4{font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px;}
+.detail-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:0.5px solid var(--border);font-size:14px;}
+.detail-row:last-child{border-bottom:none;}
+.detail-row span:first-child{color:var(--text2);}
+.detail-row span:last-child{font-weight:500;color:var(--text);text-align:right;}
+.detail-row a{color:var(--b600);font-weight:500;}
+.avatar-lg{width:52px;height:52px;border-radius:50%;background:var(--b50);color:var(--b800);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;}
 
-/* Tarifas */
-.tarifa-section{margin-top:10px;border-top:0.5px solid var(--border);padding-top:10px;}
-.tarifa-title{font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;}
-.tarifa-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:0.5px solid var(--border);font-size:13px;}
-.tarifa-row:last-child{border-bottom:none;}
-.tarifa-nombre{color:var(--text);}
-.tarifa-precio{font-weight:600;color:var(--b600);}
+/* Tarifa rows */
+.tarifa-item{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:0.5px solid var(--border);gap:8px;}
+.tarifa-item:last-child{border-bottom:none;}
+.tarifa-prod{font-size:14px;color:var(--text);flex:1;}
+.tarifa-precio-val{font-size:14px;font-weight:600;color:var(--b600);min-width:52px;text-align:right;}
+.tarifa-actions{display:flex;gap:6px;}
+.icon-btn{background:none;border:none;cursor:pointer;font-size:16px;padding:4px;color:var(--text3);}
+.icon-btn:hover{color:var(--text);}
+
+/* Tarifa cards */
+.tarifa-card{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--rad);padding:14px;margin-bottom:10px;cursor:pointer;}
+.tarifa-card:active{opacity:.85;}
+.tarifa-card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+.tarifa-card-name{font-size:15px;font-weight:600;color:var(--text);}
+.tarifa-card-count{font-size:12px;color:var(--text3);}
+.tarifa-preview{font-size:12px;color:var(--text2);line-height:1.6;}
 
 /* Modal */
 .modal-bd{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:flex-end;justify-content:center;}
 .modal-bd.open{display:flex;}
 .modal{background:var(--bg);border-radius:20px 20px 0 0;padding:20px 16px 32px;width:100%;max-width:480px;max-height:92vh;overflow-y:auto;}
 .modal-handle{width:40px;height:4px;background:var(--border2);border-radius:2px;margin:0 auto 16px;}
-.modal-title{font-size:18px;font-weight:600;margin-bottom:16px;color:var(--text);}
+.modal-title{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--text);}
 .f-row{margin-bottom:12px;}
 .f-lbl{font-size:13px;color:var(--text2);margin-bottom:5px;display:block;font-weight:500;}
-.f-row input,.f-row select,.f-row textarea{width:100%;padding:10px 12px;border:1px solid var(--border2);border-radius:var(--radius-sm);font-size:15px;background:var(--bg);color:var(--text);outline:none;}
+.f-row input,.f-row select,.f-row textarea{width:100%;padding:11px 12px;border:1px solid var(--border2);border-radius:var(--rad-sm);font-size:15px;background:var(--bg);color:var(--text);outline:none;}
 .f-row input:focus,.f-row select:focus{border-color:var(--a400);}
-.f-row textarea{height:70px;resize:none;}
+.f-row textarea{height:72px;resize:none;}
 .f-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.f-note{font-size:12px;color:var(--text3);margin-top:4px;}
+.divider{height:0.5px;background:var(--border);margin:14px 0;}
+
+/* Type toggle */
 .type-toggle{display:flex;gap:8px;margin-bottom:14px;}
-.tt-btn{flex:1;padding:10px;border-radius:var(--radius-sm);border:1px solid var(--border2);font-size:14px;cursor:pointer;background:var(--bg);color:var(--text2);font-weight:500;transition:all .15s;}
+.tt-btn{flex:1;padding:10px;border-radius:var(--rad-sm);border:1px solid var(--border2);font-size:14px;cursor:pointer;background:var(--bg);color:var(--text2);font-weight:500;}
 .tt-btn.ap{background:var(--a50);color:var(--a600);border-color:var(--a200);}
 .tt-btn.ab{background:var(--b50);color:var(--b600);border-color:var(--b200);}
-.divider{height:0.5px;background:var(--border);margin:14px 0;}
-.f-note{font-size:12px;color:var(--text3);margin-top:4px;}
 
 /* Product selector */
-.prod-selector{border:1px solid var(--border2);border-radius:var(--radius);overflow:hidden;margin-bottom:12px;}
+.prod-selector{border:1px solid var(--border2);border-radius:var(--rad);overflow:hidden;margin-bottom:12px;}
 .prod-item{display:flex;align-items:center;padding:11px 14px;border-bottom:0.5px solid var(--border);gap:10px;}
 .prod-item:last-child{border-bottom:none;}
 .prod-info{flex:1;}
 .prod-name{font-size:14px;font-weight:500;color:var(--text);}
 .prod-price{font-size:12px;color:var(--text3);margin-top:1px;}
 .qty-ctrl{display:flex;align-items:center;gap:10px;}
-.qty-btn{width:30px;height:30px;border-radius:50%;border:1px solid var(--border2);background:var(--bg2);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text);line-height:1;}
-.qty-val{font-size:15px;font-weight:600;min-width:22px;text-align:center;color:var(--text);}
-.qty-unit{font-size:11px;color:var(--text3);}
-.total-box{background:var(--a50);border-radius:var(--radius-sm);padding:14px;display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+.qty-btn{width:30px;height:30px;border-radius:50%;border:1px solid var(--border2);background:var(--bg2);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text);}
+.qty-val{font-size:15px;font-weight:600;min-width:22px;text-align:center;}
+
+/* Total box */
+.total-box{background:var(--a50);border-radius:var(--rad-sm);padding:14px;display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
 .total-lbl{font-size:14px;color:var(--a600);font-weight:500;}
 .total-val{font-size:22px;font-weight:700;color:var(--a600);}
-.iva-note{font-size:11px;color:var(--a400);margin-top:2px;text-align:right;}
+.total-iva{font-size:11px;color:var(--a400);margin-top:2px;text-align:right;}
 
 /* Buttons */
-.btn-ok{width:100%;padding:14px;background:var(--a400);color:white;border:none;border-radius:var(--radius);font-size:16px;font-weight:600;cursor:pointer;margin-top:6px;}
+.btn-ok{width:100%;padding:14px;background:var(--a400);color:#fff;border:none;border-radius:var(--rad);font-size:16px;font-weight:600;cursor:pointer;margin-top:6px;}
 .btn-ok:active{background:var(--a600);}
-.btn-cancel{width:100%;padding:11px;background:transparent;color:var(--text2);border:1px solid var(--border2);border-radius:var(--radius);font-size:14px;cursor:pointer;margin-top:8px;}
-.btn-danger{background:var(--r50);color:var(--r800);border-color:var(--r400);}
+.btn-secondary{width:100%;padding:11px;background:transparent;color:var(--text2);border:1px solid var(--border2);border-radius:var(--rad);font-size:14px;cursor:pointer;margin-top:8px;}
+.btn-danger-sm{padding:8px 14px;background:var(--r50);color:var(--r800);border:1px solid var(--r400);border-radius:var(--rad-sm);font-size:13px;cursor:pointer;}
 
-/* Status buttons */
+/* Status row */
 .status-row{display:flex;gap:8px;margin-top:10px;}
-.status-btn{flex:1;padding:8px;border-radius:var(--radius-sm);border:1px solid var(--border2);font-size:12px;cursor:pointer;background:var(--bg2);color:var(--text2);font-weight:500;}
-.status-btn.active-pend{background:var(--a50);color:var(--a600);border-color:var(--a200);}
-.status-btn.active-listo{background:var(--g50);color:var(--g800);border-color:var(--g400);}
-.status-btn.active-entre{background:var(--gr50);color:var(--gr600);border-color:var(--gr400);}
+.status-btn{flex:1;padding:9px;border-radius:var(--rad-sm);border:1px solid var(--border2);font-size:13px;cursor:pointer;background:var(--bg2);color:var(--text2);font-weight:500;}
+.status-btn.sp{background:var(--a50);color:var(--a600);border-color:var(--a200);}
+.status-btn.sl{background:var(--g50);color:var(--g800);border-color:var(--g400);}
+.status-btn.se{background:var(--gr50);color:var(--gr600);border-color:var(--gr400);}
 
-/* Albaranes */
-.alb-card{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:10px;}
-.alb-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;}
-.alb-btn-small{font-size:12px;padding:4px 12px;border-radius:20px;border:1px solid var(--b600);background:transparent;color:var(--b600);cursor:pointer;}
+/* Inline edit */
+.inline-edit{display:flex;align-items:center;gap:6px;}
+.inline-edit input{width:80px;padding:6px 8px;border:1px solid var(--a400);border-radius:6px;font-size:14px;font-weight:600;color:var(--b600);text-align:right;}
+.inline-save{background:var(--a400);color:#fff;border:none;border-radius:6px;padding:6px 10px;font-size:12px;cursor:pointer;}
 
 /* Toast */
-.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#1a1a1a;color:white;padding:10px 20px;border-radius:20px;font-size:13px;z-index:300;opacity:0;transition:opacity .3s;pointer-events:none;}
+.toast{position:fixed;bottom:84px;left:50%;transform:translateX(-50%);background:#1a1a1a;color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;z-index:300;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap;}
 .toast.show{opacity:1;}
 </style>
 </head>
@@ -167,21 +183,20 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <p>Cargando datos...</p>
 </div>
 
-<div class="header">
-  <div class="brand">KO<span>BO</span></div>
-  <div class="header-date" id="header-date"></div>
+<!-- HEADER -->
+<div class="hdr" id="hdr">
+  <button class="hdr-back" id="hdr-back" style="display:none" onclick="goBack()">←</button>
+  <div class="hdr-title" id="hdr-title">KO<span>BO</span></div>
+  <div class="hdr-date" id="hdr-date"></div>
 </div>
 
-<!-- PEDIDOS -->
-<div class="panel active" id="panel-pedidos">
+<!-- SCREEN: PEDIDOS -->
+<div class="screen active" id="scr-pedidos">
   <div class="stats">
     <div class="stat"><div class="stat-lbl">Activos hoy</div><div class="stat-val" id="s-activos">—</div><div class="stat-sub">pedidos</div></div>
     <div class="stat"><div class="stat-lbl">Este mes</div><div class="stat-val" id="s-mes">—</div><div class="stat-sub">facturado</div></div>
   </div>
-  <div class="sec-hdr">
-    <span class="sec-title">Pedidos</span>
-    <button class="btn-new" onclick="openNuevoPedido()">+ Nuevo</button>
-  </div>
+  <div class="sec-hdr"><span class="sec-title">Pedidos</span><button class="btn-new" onclick="openNuevoPedido()">+ Nuevo</button></div>
   <div class="chips">
     <button class="chip active" onclick="filterPedidos('todos',this)">Todos</button>
     <button class="chip" onclick="filterPedidos('particular',this)">Particulares</button>
@@ -192,17 +207,23 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <div id="orders-list"></div>
 </div>
 
-<!-- CLIENTES -->
-<div class="panel" id="panel-clientes">
-  <div class="sec-hdr">
-    <span class="sec-title">Clientes profesionales</span>
-    <button class="btn-new" onclick="openNuevoCliente()">+ Nuevo</button>
+<!-- SCREEN: CLIENTES -->
+<div class="screen" id="scr-clientes">
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="text" placeholder="Buscar por nombre o NIF..." oninput="filterClientes(this.value)" id="search-clientes"/>
   </div>
+  <div class="sec-hdr"><span class="sec-title">Clientes profesionales</span><button class="btn-new" onclick="openNuevoCliente()">+ Nuevo</button></div>
   <div id="clients-list"></div>
 </div>
 
-<!-- ALBARANES -->
-<div class="panel" id="panel-albaranes">
+<!-- SCREEN: DETALLE CLIENTE -->
+<div class="screen" id="scr-cliente-detail">
+  <div id="cliente-detail-body"></div>
+</div>
+
+<!-- SCREEN: ALBARANES -->
+<div class="screen" id="scr-albaranes">
   <div class="stats">
     <div class="stat"><div class="stat-lbl">Por facturar</div><div class="stat-val" id="s-porfacturar">—</div><div class="stat-sub">importe</div></div>
     <div class="stat"><div class="stat-lbl">Este mes</div><div class="stat-val" id="s-alb-mes">—</div><div class="stat-sub">albaranes</div></div>
@@ -211,16 +232,28 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <div id="alb-list"></div>
 </div>
 
+<!-- SCREEN: TARIFAS -->
+<div class="screen" id="scr-tarifas">
+  <div class="sec-hdr"><span class="sec-title">Tarifas</span><button class="btn-new" onclick="openNuevaTarifa()">+ Nueva</button></div>
+  <div id="tarifas-list"></div>
+</div>
+
+<!-- SCREEN: DETALLE TARIFA -->
+<div class="screen" id="scr-tarifa-detail">
+  <div id="tarifa-detail-body"></div>
+</div>
+
 <!-- BOTTOM NAV -->
-<nav class="bottom-nav">
-  <button class="nav-btn active" onclick="switchTab('pedidos',this)"><span class="nav-icon">📋</span>Pedidos</button>
-  <button class="nav-btn" onclick="switchTab('clientes',this)"><span class="nav-icon">🏪</span>Clientes</button>
-  <button class="nav-btn" onclick="switchTab('albaranes',this)"><span class="nav-icon">📄</span>Albaranes</button>
+<nav class="bnav" id="bnav">
+  <button class="nb active" onclick="switchTab('pedidos',this)"><span class="nb-icon">📋</span>Pedidos</button>
+  <button class="nb" onclick="switchTab('clientes',this)"><span class="nb-icon">🏪</span>Clientes</button>
+  <button class="nb" onclick="switchTab('albaranes',this)"><span class="nb-icon">📄</span>Albaranes</button>
+  <button class="nb" onclick="switchTab('tarifas',this)"><span class="nb-icon">💰</span>Tarifas</button>
 </nav>
 
 <!-- MODAL -->
 <div class="modal-bd" id="modal" onclick="closeMOut(event)">
-  <div class="modal" id="modal-inner">
+  <div class="modal">
     <div class="modal-handle"></div>
     <div class="modal-title" id="modal-title"></div>
     <div id="modal-body"></div>
@@ -233,484 +266,618 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbykvz5mvtq37Z_vFJh1wCh4pkWqwjrzsXWdNWopCaSeLSyxS4kOlbj4LMDtCHLVjQu5/exec';
 const IVA = 0.04;
 
-let productos = [];
-let clientes = [];
-let pedidos = [];
-let albaranes = [];
-let curFilter = 'todos';
-let curQtys = {};
-let curTipo = 'particular';
-let curClienteId = null;
+let productos=[], clientes=[], pedidos=[], albaranes=[], tarifas=[];
+let curFilter='todos', curQtys={}, curTipo='particular', curClienteId=null;
+let prevScreen=null, curTarifaId=null, curClienteDetailId=null;
 
-// --- API ---
-async function api(params) {
-  const url = SCRIPT_URL + '?' + new URLSearchParams(params);
-  const res = await fetch(url);
-  return res.json();
+async function api(params){
+  const url=SCRIPT_URL+'?'+new URLSearchParams(params);
+  const r=await fetch(url);
+  return r.json();
 }
 
-async function loadAll() {
-  try {
-    [productos, clientes, pedidos, albaranes] = await Promise.all([
+async function loadAll(){
+  try{
+    [productos,clientes,pedidos,albaranes,tarifas]=await Promise.all([
       api({action:'getProductos'}),
       api({action:'getClientes'}),
       api({action:'getPedidos'}),
       api({action:'getAlbaranes'}),
+      api({action:'getTarifas'}),
     ]);
-    clientes = clientes.map(c => ({
-      ...c,
-      Precios: c.Precios ? JSON.parse(c.Precios) : {}
-    }));
-    pedidos = pedidos.map(p => ({
-      ...p,
-      Lineas: p.Lineas ? JSON.parse(p.Lineas) : []
-    }));
-    albaranes = albaranes.map(a => ({
-      ...a,
-      Lineas: a.Lineas ? JSON.parse(a.Lineas) : []
-    }));
+    pedidos=pedidos.map(p=>({...p,Lineas:p.Lineas?tryParse(p.Lineas):[]}));
+    albaranes=albaranes.map(a=>({...a,Lineas:a.Lineas?tryParse(a.Lineas):[]}));
     renderAll();
-    document.getElementById('loading').style.display = 'none';
-  } catch(e) {
-    document.getElementById('loading').innerHTML = '<p style="color:red;padding:2rem;text-align:center">Error conectando con Google Sheets.<br>Comprueba tu conexión.</p>';
+    document.getElementById('loading').style.display='none';
+  }catch(e){
+    document.getElementById('loading').innerHTML='<p style="color:red;padding:2rem;text-align:center">Error conectando.<br>Comprueba tu conexión.</p>';
   }
 }
 
-// --- RENDER ---
-function renderAll() {
+function tryParse(s){try{return JSON.parse(s);}catch{return[];}}
+
+function renderAll(){
   renderPedidos(curFilter);
-  renderClientes();
+  renderClientes('');
   renderAlbaranes();
+  renderTarifas();
   updateStats();
 }
 
-function fmtDate(d) {
-  if (!d) return '—';
-  const s = d.toString();
-  if (s.includes('/')) return s;
-  const [y,m,day] = s.split('-');
-  return `${day}/${m}/${y}`;
+function fmtDate(d){
+  if(!d||d==='—'||d==='')return'—';
+  const s=d.toString().trim();
+  if(s.includes('T'))return s.slice(0,10).split('-').reverse().join('/');
+  if(s.match(/^\d{4}-\d{2}-\d{2}$/))return s.split('-').reverse().join('/');
+  return s;
+}
+function fmtDateShort(d){
+  const f=fmtDate(d);
+  if(f==='—')return'—';
+  const p=f.split('/');
+  return p[0]+'/'+p[1];
+}
+function initials(n){return n.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();}
+function resumeLineas(l){if(!l||!l.length)return'—';return l.map(x=>`${x.qty} ${x.nombre}`).join(', ');}
+
+function updateStats(){
+  const activos=pedidos.filter(p=>p.Estado!=='entregado').length;
+  const now=new Date();
+  const mesStr=String(now.getMonth()+1).padStart(2,'0');
+  const anyoStr=String(now.getFullYear());
+  const totalMes=pedidos.filter(p=>{const f=(p.Fecha||'').toString();return f.startsWith(anyoStr+'-'+mesStr);}).reduce((s,p)=>s+(parseFloat(p.Total)||0),0);
+  document.getElementById('s-activos').textContent=activos;
+  document.getElementById('s-mes').textContent='€'+Math.round(totalMes*1.04);
+  const porFact=albaranes.filter(a=>a.Facturado!=='SI').reduce((s,a)=>s+(parseFloat(a.Importe)||0),0);
+  const albMes=albaranes.filter(a=>(a.Fecha||'').toString().startsWith(anyoStr+'-'+mesStr)).length;
+  document.getElementById('s-porfacturar').textContent='€'+porFact.toFixed(0);
+  document.getElementById('s-alb-mes').textContent=albMes;
 }
 
-function fmtDateShort(d) {
-  if (!d) return '—';
-  const s = d.toString();
-  const parts = s.includes('-') ? s.split('-') : s.split('/').reverse();
-  return `${parts[2]}/${parts[1]}`;
-}
-
-function initials(n) {
-  return n.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
-}
-
-function resumeLineas(lineas) {
-  if (!lineas || !lineas.length) return '—';
-  return lineas.map(l => `${l.qty} ${l.nombre}`).join(', ');
-}
-
-function updateStats() {
-  const hoy = new Date().toISOString().slice(0,10);
-  const activos = pedidos.filter(p => p.Estado !== 'entregado').length;
-  const mes = new Date().getMonth();
-  const anyo = new Date().getFullYear();
-  const totalMes = pedidos
-    .filter(p => {
-      const f = p.Fecha ? p.Fecha.toString() : '';
-      return f.startsWith(`${anyo}-${String(mes+1).padStart(2,'0')}`);
-    })
-    .reduce((sum, p) => sum + (parseFloat(p.Total) || 0), 0);
-
-  document.getElementById('s-activos').textContent = activos;
-  document.getElementById('s-mes').textContent = '€' + totalMes.toFixed(0);
-
-  const porFacturar = albaranes
-    .filter(a => a.Facturado === 'NO' || a.Facturado === '')
-    .reduce((sum, a) => sum + (parseFloat(a.Importe) || 0), 0);
-  const albMes = albaranes.filter(a => {
-    const f = a.Fecha ? a.Fecha.toString() : '';
-    return f.startsWith(`${anyo}-${String(mes+1).padStart(2,'0')}`);
-  }).length;
-  document.getElementById('s-porfacturar').textContent = '€' + porFacturar.toFixed(0);
-  document.getElementById('s-alb-mes').textContent = albMes;
-}
-
-function renderPedidos(filter) {
-  const list = document.getElementById('orders-list');
-  let data = [...pedidos].reverse();
-  if (filter === 'particular' || filter === 'profesional') data = data.filter(p => p.Tipo === filter);
-  else if (filter === 'pendiente' || filter === 'listo') data = data.filter(p => p.Estado === filter);
-
-  if (!data.length) { list.innerHTML = '<div class="empty">Sin pedidos</div>'; return; }
-
-  list.innerHTML = data.map(p => {
-    const bE = p.Estado==='pendiente'?'b-pend':p.Estado==='listo'?'b-listo':'b-entre';
-    const lE = p.Estado==='pendiente'?'Pendiente':p.Estado==='listo'?'Listo':'Entregado';
-    const tB = p.Tipo==='profesional'?'<span class="badge b-prof" style="margin-right:4px">Profesional</span>':'<span class="badge b-part" style="margin-right:4px">Particular</span>';
-    const aB = p.Albaran ? `<span class="badge b-alb">${p.Albaran}</span>` : '';
-    const totalConIva = (parseFloat(p.Total)||0) * (1 + IVA);
-    return `<div class="card" onclick="openDetallePedido('${p.ID}')">
+// --- PEDIDOS ---
+function renderPedidos(filter){
+  const list=document.getElementById('orders-list');
+  let data=[...pedidos].reverse();
+  if(filter==='particular'||filter==='profesional')data=data.filter(p=>p.Tipo===filter);
+  else if(filter==='pendiente'||filter==='listo')data=data.filter(p=>p.Estado===filter);
+  if(!data.length){list.innerHTML='<div class="empty">Sin pedidos</div>';return;}
+  list.innerHTML=data.map(p=>{
+    const bE=p.Estado==='pendiente'?'b-pend':p.Estado==='listo'?'b-listo':'b-entre';
+    const lE=p.Estado==='pendiente'?'Pendiente':p.Estado==='listo'?'Listo':'Entregado';
+    const tB=p.Tipo==='profesional'?'<span class="badge b-prof" style="margin-right:4px">Prof.</span>':'<span class="badge b-part" style="margin-right:4px">Part.</span>';
+    const aB=p.Albaran?`<span class="badge b-alb">${p.Albaran}</span>`:'';
+    const totalIva=((parseFloat(p.Total)||0)*1.04).toFixed(2);
+    return`<div class="card" onclick="openDetallePedido('${p.ID}')">
       <div class="card-top"><div><div class="card-name">${p.Cliente}</div><div class="card-sub">${p.ID}</div></div><span class="badge ${bE}">${lE}</span></div>
       <div class="card-body">${resumeLineas(p.Lineas)}</div>
-      <div class="card-foot">
-        <div style="display:flex;gap:4px;flex-wrap:wrap">${tB}${aB}</div>
-        <div style="text-align:right"><div class="price-lbl">€${totalConIva.toFixed(2)}</div><div class="time-lbl">${fmtDateShort(p.Fecha)} · ${p.Hora||''}</div></div>
-      </div>
+      <div class="card-foot"><div style="display:flex;gap:4px;flex-wrap:wrap">${tB}${aB}</div><div style="text-align:right"><div class="price-lbl">€${totalIva}</div><div class="time-lbl">${fmtDateShort(p.Fecha)} · ${p.Hora||''}</div></div></div>
     </div>`;
   }).join('');
 }
 
-function renderClientes() {
-  const list = document.getElementById('clients-list');
-  if (!clientes.length) { list.innerHTML = '<div class="empty">Sin clientes profesionales</div>'; return; }
-  list.innerHTML = clientes.map(c => {
-    const precios = c.Precios || {};
-    const tarifaRows = Object.keys(precios).map(pid => {
-      const prod = productos.find(p => p.ID === pid);
-      if (!prod) return '';
-      return `<div class="tarifa-row"><span class="tarifa-nombre">${prod.Nombre} ${prod.Formato}</span><span class="tarifa-precio">€${parseFloat(precios[pid]).toFixed(2)}</span></div>`;
-    }).join('');
-    const pendiente = parseFloat(c.Pendiente) || 0;
-    const pendStrip = pendiente > 0 ? `<div class="pend-strip"><span>Pendiente: €${pendiente.toFixed(2)}</span><button class="pend-btn" onclick="event.stopPropagation();showToast('Función de factura próximamente')">Generar factura</button></div>` : '';
-    return `<div class="client-card">
-      <div class="client-top">
-        <div class="avatar">${initials(c.Nombre)}</div>
-        <div><div class="card-name">${c.Nombre}</div><div class="card-sub" style="font-size:12px;color:var(--text3)">${c.Contacto} · ${c.NIF}</div></div>
+function filterPedidos(f,el){
+  curFilter=f;
+  document.querySelectorAll('#scr-pedidos .chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  renderPedidos(f);
+}
+
+// --- CLIENTES ---
+function renderClientes(q){
+  const list=document.getElementById('clients-list');
+  let data=clientes;
+  if(q){const ql=q.toLowerCase();data=data.filter(c=>c.Nombre.toLowerCase().includes(ql)||c.NIF.toLowerCase().includes(ql));}
+  if(!data.length){list.innerHTML='<div class="empty">Sin clientes</div>';return;}
+  list.innerHTML=data.map(c=>{
+    const nProd=tarifas.filter(t=>t.TarifaID===c.TarifaID).length;
+    const tNombre=c.TarifaID?`Tarifa: ${getTarifaNombre(c.TarifaID)}`:'Sin tarifa asignada';
+    return`<div class="card" onclick="openClienteDetail('${c.ID}')">
+      <div class="card-top">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div class="avatar-lg" style="width:40px;height:40px;font-size:14px">${initials(c.Nombre)}</div>
+          <div><div class="card-name">${c.Nombre}</div><div class="card-sub">${c.NIF}</div></div>
+        </div>
+        <span class="badge b-prof">${nProd} productos</span>
       </div>
-      <div class="client-rows">
-        <div class="client-row"><span>Teléfono</span><span><a href="tel:${c.Telefono}" onclick="event.stopPropagation()">${c.Telefono||'—'}</a></span></div>
-        <div class="client-row"><span>Dirección</span><span>${c.Direccion||'—'}</span></div>
-        <div class="client-row"><span>Alta</span><span>${fmtDate(c.Alta)}</span></div>
-        <div class="client-row"><span>Último pedido</span><span>${fmtDate(c.UltimoPedido)}</span></div>
-      </div>
-      ${tarifaRows ? `<div class="tarifa-section"><div class="tarifa-title">Tarifa pactada (sin IVA)</div>${tarifaRows}</div>` : ''}
-      ${pendStrip}
+      <div class="card-body">${c.Contacto||''} ${c.Telefono?'· '+c.Telefono:''}</div>
+      <div class="card-foot"><span style="font-size:12px;color:var(--text3)">${tNombre}</span><span style="font-size:12px;color:var(--text3)">Último: ${fmtDateShort(c.UltimoPedido)}</span></div>
     </div>`;
   }).join('');
 }
 
-function renderAlbaranes() {
-  const list = document.getElementById('alb-list');
-  const data = [...albaranes].reverse();
-  if (!data.length) { list.innerHTML = '<div class="empty">Sin albaranes</div>'; return; }
-  list.innerHTML = data.map(a => {
-    const facturado = a.Facturado === 'SI';
-    return `<div class="alb-card">
-      <div class="alb-top">
-        <div><div class="card-name">${a.ClienteID}</div><div class="card-sub">${a.ID} · ${fmtDate(a.Fecha)}</div></div>
-        <div style="text-align:right"><div class="price-lbl">€${(parseFloat(a.Importe)||0).toFixed(2)}</div><span class="badge ${facturado?'b-entre':'b-alb'}">${facturado?'Facturado':'Pendiente'}</span></div>
+function filterClientes(q){renderClientes(q);}
+
+function getTarifaNombre(tid){
+  const rows=tarifas.filter(t=>t.TarifaID===tid);
+  return rows.length?rows[0].Nombre:'—';
+}
+
+function openClienteDetail(id){
+  curClienteDetailId=id;
+  const c=clientes.find(x=>x.ID===id);
+  if(!c)return;
+  showScreen('scr-cliente-detail','scr-clientes');
+  setHdr(c.Nombre,true);
+  const pendiente=parseFloat(c.Pendiente)||0;
+  const tRows=tarifas.filter(t=>t.TarifaID===c.TarifaID);
+  const tarifaNombre=c.TarifaID?getTarifaNombre(c.TarifaID):'Sin tarifa';
+  const tarifaSection=tRows.length?`
+    <div class="detail-section">
+      <h4>Tarifa pactada — ${tarifaNombre}</h4>
+      ${tRows.map(t=>{
+        const prod=productos.find(p=>p.ID===t.ProductoID);
+        return`<div class="tarifa-item">
+          <span class="tarifa-prod">${prod?prod.Nombre+' '+prod.Formato:t.ProductoID}</span>
+          <span class="tarifa-precio-val">€${parseFloat(t.Precio).toFixed(2)}</span>
+        </div>`;
+      }).join('')}
+    </div>`:'<div class="detail-section"><p style="font-size:13px;color:var(--text3)">Sin tarifa asignada. Asigna una desde el apartado Tarifas.</p></div>';
+
+  document.getElementById('cliente-detail-body').innerHTML=`
+    <div class="detail-section">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
+        <div class="avatar-lg">${initials(c.Nombre)}</div>
+        <div><div style="font-size:18px;font-weight:700">${c.Nombre}</div><div style="font-size:13px;color:var(--text2)">${c.NIF}</div></div>
       </div>
+      <h4>Datos de contacto</h4>
+      <div class="detail-row"><span>Contacto</span><span>${c.Contacto||'—'}</span></div>
+      <div class="detail-row"><span>Teléfono</span><span>${c.Telefono?`<a href="tel:${c.Telefono}">${c.Telefono}</a>`:'—'}</span></div>
+      <div class="detail-row"><span>Dirección</span><span>${c.Direccion||'—'}</span></div>
+      <div class="detail-row"><span>Alta</span><span>${fmtDate(c.Alta)}</span></div>
+      <div class="detail-row"><span>Último pedido</span><span>${fmtDate(c.UltimoPedido)}</span></div>
+      ${pendiente>0?`<div class="detail-row"><span>Pendiente facturar</span><span style="color:var(--p600);font-weight:700">€${pendiente.toFixed(2)}</span></div>`:''}
+    </div>
+    ${tarifaSection}
+    <button class="btn-secondary" onclick="openEditarCliente('${c.ID}')">✏️ Editar cliente</button>
+  `;
+}
+
+// --- ALBARANES ---
+function renderAlbaranes(){
+  const list=document.getElementById('alb-list');
+  const data=[...albaranes].reverse();
+  if(!data.length){list.innerHTML='<div class="empty">Sin albaranes</div>';return;}
+  list.innerHTML=data.map(a=>{
+    const fact=a.Facturado==='SI';
+    return`<div class="card">
+      <div class="card-top"><div><div class="card-name">${a.ClienteID}</div><div class="card-sub">${a.ID} · ${fmtDate(a.Fecha)}</div></div><div style="text-align:right"><div class="price-lbl">€${(parseFloat(a.Importe)||0).toFixed(2)}</div><span class="badge ${fact?'b-entre':'b-alb'}">${fact?'Facturado':'Pendiente'}</span></div></div>
       <div class="card-body">${resumeLineas(a.Lineas)}</div>
     </div>`;
   }).join('');
 }
 
-// --- FILTROS ---
-function filterPedidos(f, el) {
-  curFilter = f;
-  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-  el.classList.add('active');
-  renderPedidos(f);
+// --- TARIFAS ---
+function renderTarifas(){
+  const list=document.getElementById('tarifas-list');
+  const ids=[...new Set(tarifas.map(t=>t.TarifaID))];
+  // Añadir tarifa de particulares (del catálogo)
+  const html=`
+    <div class="tarifa-card" onclick="openTarifaDetail('__particulares__')">
+      <div class="tarifa-card-top"><span class="tarifa-card-name">Particulares</span><span class="tarifa-card-count">${productos.filter(p=>p.Solo_Prof!=='SI'&&p.PVP&&p.PVP!=='').length} productos</span></div>
+      <div class="tarifa-preview">Tarifa base del catálogo (PVP con IVA 4%)</div>
+    </div>
+    ${ids.map(tid=>{
+      const rows=tarifas.filter(t=>t.TarifaID===tid);
+      const nombre=rows[0]?.Nombre||tid;
+      const clientesAsig=clientes.filter(c=>c.TarifaID===tid).map(c=>c.Nombre).join(', ');
+      return`<div class="tarifa-card" onclick="openTarifaDetail('${tid}')">
+        <div class="tarifa-card-top"><span class="tarifa-card-name">${nombre}</span><span class="tarifa-card-count">${rows.length} productos</span></div>
+        ${clientesAsig?`<div class="tarifa-preview" style="margin-bottom:4px">Clientes: ${clientesAsig}</div>`:''}
+        <div class="tarifa-preview">${rows.slice(0,3).map(r=>{const p=productos.find(x=>x.ID===r.ProductoID);return p?p.Nombre+' '+p.Formato:'';}).filter(Boolean).join(' · ')}${rows.length>3?' · ...':''}</div>
+      </div>`;
+    }).join('')}`;
+  list.innerHTML=html;
 }
 
-function switchTab(tab, el) {
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  el.classList.add('active');
-  ['pedidos','clientes','albaranes'].forEach(p => {
-    document.getElementById('panel-'+p).classList.toggle('active', p===tab);
-  });
+function openTarifaDetail(tid){
+  curTarifaId=tid;
+  showScreen('scr-tarifa-detail','scr-tarifas');
+  renderTarifaDetail(tid);
 }
 
-// --- MODAL ---
-function openModal(title, body) {
-  document.getElementById('modal-title').textContent = title;
-  document.getElementById('modal-body').innerHTML = body;
-  document.getElementById('modal').classList.add('open');
+function renderTarifaDetail(tid){
+  if(tid==='__particulares__'){
+    setHdr('Tarifa Particulares',true);
+    const rows=productos.filter(p=>p.Solo_Prof!=='SI'&&p.PVP&&p.PVP!=='');
+    document.getElementById('tarifa-detail-body').innerHTML=`
+      <div class="detail-section">
+        <h4>Productos y PVP (con IVA 4%)</h4>
+        ${rows.map(p=>`<div class="tarifa-item"><span class="tarifa-prod">${p.Nombre} ${p.Formato}</span><span class="tarifa-precio-val">€${(parseFloat(p.PVP)*1.04).toFixed(2)}</span></div>`).join('')}
+      </div>
+      <p style="font-size:12px;color:var(--text3);text-align:center;padding:8px">Para modificar precios de particulares edita el catálogo de productos.</p>`;
+    return;
+  }
+  const rows=tarifas.filter(t=>t.TarifaID===tid);
+  const nombre=rows[0]?.Nombre||tid;
+  setHdr(nombre,true);
+  const usadaPor=clientes.filter(c=>c.TarifaID===tid).map(c=>c.Nombre).join(', ')||'Ningún cliente';
+  document.getElementById('tarifa-detail-body').innerHTML=`
+    <div class="detail-section">
+      <h4>Productos y precios (sin IVA)</h4>
+      <div id="tarifa-rows">
+        ${rows.map(r=>{
+          const p=productos.find(x=>x.ID===r.ProductoID);
+          return`<div class="tarifa-item" id="trow-${r.ProductoID}">
+            <span class="tarifa-prod">${p?p.Nombre+' '+p.Formato:r.ProductoID}</span>
+            <div class="tarifa-actions">
+              <span class="tarifa-precio-val" id="tpv-${r.ProductoID}">€${parseFloat(r.Precio).toFixed(2)}</span>
+              <button class="icon-btn" onclick="editarPrecioTarifa('${tid}','${r.ProductoID}')">✏️</button>
+              <button class="icon-btn" onclick="quitarProductoTarifa('${tid}','${r.ProductoID}')">🗑️</button>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+      <button class="btn-new" style="margin-top:12px;width:100%;border-radius:var(--rad-sm)" onclick="openAnadirProductoTarifa('${tid}')">+ Añadir producto</button>
+    </div>
+    <div class="detail-section">
+      <h4>Clientes con esta tarifa</h4>
+      <p style="font-size:13px;color:var(--text2)">${usadaPor}</p>
+    </div>
+    <button class="btn-secondary btn-danger-sm" style="width:100%;margin-top:4px" onclick="confirmarEliminarTarifa('${tid}')">🗑️ Eliminar tarifa</button>`;
 }
-function closeModal() { document.getElementById('modal').classList.remove('open'); }
-function closeMOut(e) { if (e.target === document.getElementById('modal')) closeModal(); }
+
+function editarPrecioTarifa(tid,pid){
+  const row=tarifas.find(t=>t.TarifaID===tid&&t.ProductoID===pid);
+  if(!row)return;
+  const el=document.getElementById('tpv-'+pid);
+  const precioActual=parseFloat(row.Precio).toFixed(2);
+  el.outerHTML=`<div class="inline-edit"><input type="number" id="inp-${pid}" value="${precioActual}" step="0.01" style="width:80px"/><button class="inline-save" onclick="guardarPrecioTarifa('${tid}','${pid}')">✓</button></div>`;
+  setTimeout(()=>document.getElementById('inp-'+pid)?.focus(),50);
+}
+
+async function guardarPrecioTarifa(tid,pid){
+  const inp=document.getElementById('inp-'+pid);
+  if(!inp)return;
+  const nuevo=parseFloat(inp.value);
+  if(isNaN(nuevo)||nuevo<=0){showToast('Precio inválido');return;}
+  await api({action:'updateTarifaRow',data:JSON.stringify({TarifaID:tid,ProductoID:pid,Precio:nuevo.toFixed(2)})});
+  const row=tarifas.find(t=>t.TarifaID===tid&&t.ProductoID===pid);
+  if(row)row.Precio=nuevo.toFixed(2);
+  renderTarifaDetail(tid);
+  showToast('✓ Precio actualizado');
+}
+
+function openAnadirProductoTarifa(tid){
+  const yaEnTarifa=tarifas.filter(t=>t.TarifaID===tid).map(t=>t.ProductoID);
+  const disponibles=productos.filter(p=>!yaEnTarifa.includes(p.ID));
+  if(!disponibles.length){showToast('Todos los productos ya están en esta tarifa');return;}
+  openModal('Añadir producto',`
+    <div class="f-row"><label class="f-lbl">Producto</label>
+      <select id="f-addprod"><option value="">Seleccionar...</option>${disponibles.map(p=>`<option value="${p.ID}">${p.Nombre} ${p.Formato}</option>`).join('')}</select>
+    </div>
+    <div class="f-row"><label class="f-lbl">Precio sin IVA (€)</label><input type="number" id="f-addprecio" placeholder="0.00" step="0.01"/></div>
+    <button class="btn-ok" onclick="saveProductoEnTarifa('${tid}')">Añadir</button>
+    <button class="btn-secondary" onclick="closeModal()">Cancelar</button>`);
+}
+
+async function saveProductoEnTarifa(tid){
+  const pid=document.getElementById('f-addprod')?.value;
+  const precio=parseFloat(document.getElementById('f-addprecio')?.value);
+  if(!pid){showToast('Selecciona un producto');return;}
+  if(isNaN(precio)||precio<=0){showToast('Introduce un precio válido');return;}
+  const nombre=getTarifaNombre(tid);
+  await api({action:'saveTarifaRow',data:JSON.stringify({TarifaID:tid,Nombre:nombre,ProductoID:pid,Precio:precio.toFixed(2)})});
+  tarifas.push({TarifaID:tid,Nombre:nombre,ProductoID:pid,Precio:precio.toFixed(2)});
+  closeModal();
+  renderTarifaDetail(tid);
+  renderTarifas();
+  showToast('✓ Producto añadido');
+}
+
+async function quitarProductoTarifa(tid,pid){
+  if(!confirm('¿Quitar este producto de la tarifa?'))return;
+  await api({action:'deleteTarifaRow',data:JSON.stringify({TarifaID:tid,ProductoID:pid})});
+  const i=tarifas.findIndex(t=>t.TarifaID===tid&&t.ProductoID===pid);
+  if(i>-1)tarifas.splice(i,1);
+  renderTarifaDetail(tid);
+  renderTarifas();
+  showToast('✓ Producto eliminado');
+}
+
+async function confirmarEliminarTarifa(tid){
+  if(!confirm('¿Eliminar esta tarifa? Los clientes que la usen quedarán sin tarifa.'))return;
+  await api({action:'deleteTarifaRows',data:JSON.stringify({TarifaID:tid})});
+  tarifas=tarifas.filter(t=>t.TarifaID!==tid);
+  clientes.forEach(c=>{if(c.TarifaID===tid)c.TarifaID='';});
+  goBack();
+  renderTarifas();
+  showToast('✓ Tarifa eliminada');
+}
+
+function openNuevaTarifa(){
+  openModal('Nueva tarifa',`
+    <div class="f-row"><label class="f-lbl">Nombre de la tarifa</label><input type="text" id="f-tnombre" placeholder="Ej: Lo de Juan, Profesionales..."/></div>
+    <p class="f-note">Después de crear la tarifa podrás añadir productos y precios desde el detalle.</p>
+    <button class="btn-ok" onclick="saveNuevaTarifa()">Crear tarifa</button>
+    <button class="btn-secondary" onclick="closeModal()">Cancelar</button>`);
+}
+
+async function saveNuevaTarifa(){
+  const nombre=document.getElementById('f-tnombre')?.value.trim();
+  if(!nombre){showToast('Introduce un nombre');return;}
+  const tid='T-'+String(Date.now()).slice(-6);
+  // Guardar una fila placeholder para que la tarifa exista
+  await api({action:'saveTarifaRow',data:JSON.stringify({TarifaID:tid,Nombre:nombre,ProductoID:'',Precio:''})});
+  tarifas.push({TarifaID:tid,Nombre:nombre,ProductoID:'',Precio:''});
+  closeModal();
+  renderTarifas();
+  openTarifaDetail(tid);
+  showToast('✓ Tarifa creada');
+}
 
 // --- NUEVO PEDIDO ---
-function openNuevoPedido() {
-  curQtys = {}; curTipo = 'particular'; curClienteId = null;
-  openModal('Nuevo pedido', buildPedidoForm());
+function openNuevoPedido(){
+  curQtys={};curTipo='particular';curClienteId=null;
+  openModal('Nuevo pedido',buildPedidoForm());
 }
 
-function buildPedidoForm() {
-  const clienteOptions = clientes.map(c => `<option value="${c.ID}">${c.Nombre}</option>`).join('');
-  return `
+function buildPedidoForm(){
+  return`
     <div class="type-toggle">
       <button class="tt-btn ap" id="tt-part" onclick="setTipo('particular')">Particular</button>
       <button class="tt-btn" id="tt-prof" onclick="setTipo('profesional')">Profesional</button>
     </div>
-    <div class="f-row" id="campo-cliente">
-      <label class="f-lbl">Cliente</label>
-      <input type="text" id="f-cli" placeholder="Nombre del cliente"/>
-    </div>
-    <div class="f-row hidden" id="campo-prof-extra">
-      <p class="f-note" style="margin-bottom:0">Precios cargados automáticamente según cliente.</p>
-    </div>
+    <div class="f-row" id="campo-cliente"><label class="f-lbl">Cliente</label><input type="text" id="f-cli" placeholder="Nombre del cliente"/></div>
     <div class="divider"></div>
     <div class="f-lbl" style="margin-bottom:8px">Productos</div>
     <div class="prod-selector" id="prod-selector">${buildProdSelector()}</div>
     <div class="total-box">
-      <span class="total-lbl">Total (sin IVA)</span>
-      <div style="text-align:right">
-        <div class="total-val" id="total-display">€0.00</div>
-        <div class="iva-note" id="total-iva">Con IVA (4%): €0.00</div>
-      </div>
+      <span class="total-lbl">Total sin IVA</span>
+      <div style="text-align:right"><div class="total-val" id="total-display">€0.00</div><div class="total-iva" id="total-iva">Con IVA (4%): €0.00</div></div>
     </div>
     <div class="f-grid">
       <div class="f-row"><label class="f-lbl">Fecha recogida</label><input type="date" id="f-fecha"/></div>
       <div class="f-row"><label class="f-lbl">Hora</label><input type="time" id="f-hora"/></div>
     </div>
     <button class="btn-ok" onclick="savePedido()">Guardar pedido</button>
-    <button class="btn-cancel" onclick="closeModal()">Cancelar</button>`;
+    <button class="btn-secondary" onclick="closeModal()">Cancelar</button>`;
 }
 
-function buildProdSelector() {
-  const prodsVisibles = curTipo === 'particular'
-    ? productos.filter(p => p.Solo_Prof !== 'SI' && p.Solo_Prof !== 'SI' && (p.PVP !== '' && p.PVP !== undefined))
-    : productos.filter(p => {
-        if (!curClienteId) return false;
-        const c = clientes.find(x => x.ID === curClienteId);
-        return c && c.Precios && c.Precios[p.ID] !== undefined;
-      });
-
-  if (!prodsVisibles.length) {
-    return '<div style="padding:20px;text-align:center;font-size:13px;color:var(--text3)">Selecciona un cliente profesional para ver sus productos</div>';
+function buildProdSelector(){
+  let prods=[];
+  if(curTipo==='particular'){
+    prods=productos.filter(p=>p.Solo_Prof!=='SI'&&p.PVP&&p.PVP!=='');
+  } else {
+    if(!curClienteId)return'<div style="padding:20px;text-align:center;font-size:13px;color:var(--text3)">Selecciona un cliente para ver sus productos</div>';
+    const c=clientes.find(x=>x.ID===curClienteId);
+    const tRows=c&&c.TarifaID?tarifas.filter(t=>t.TarifaID===c.TarifaID&&t.ProductoID&&t.ProductoID!==''):[];
+    prods=tRows.map(t=>({...productos.find(p=>p.ID===t.ProductoID)||{ID:t.ProductoID,Nombre:t.ProductoID,Formato:'',Unidad:'ud'},_precio:t.Precio})).filter(p=>p.Nombre);
   }
-
-  return prodsVisibles.map(p => {
-    const precio = getPrecio(p.ID);
-    return `<div class="prod-item">
-      <div class="prod-info">
-        <div class="prod-name">${p.Nombre} <span style="font-size:11px;color:var(--text3)">${p.Formato}</span></div>
-        <div class="prod-price">€${precio.toFixed(2)} / ${p.Unidad} (sin IVA)</div>
-      </div>
-      <div class="qty-ctrl">
-        <button class="qty-btn" onclick="changeQty('${p.ID}',-1)">−</button>
-        <span class="qty-val" id="qty-${p.ID}">${curQtys[p.ID]||0}</span>
-        <button class="qty-btn" onclick="changeQty('${p.ID}',1)">+</button>
-      </div>
+  if(!prods.length)return'<div style="padding:20px;text-align:center;font-size:13px;color:var(--text3)">Sin productos disponibles</div>';
+  return prods.map(p=>{
+    const precio=curTipo==='profesional'?(parseFloat(p._precio)||0):parseFloat(p.PVP)||0;
+    return`<div class="prod-item">
+      <div class="prod-info"><div class="prod-name">${p.Nombre} <span style="font-size:11px;color:var(--text3)">${p.Formato}</span></div><div class="prod-price">€${precio.toFixed(2)} / ${p.Unidad||'ud'} (sin IVA)</div></div>
+      <div class="qty-ctrl"><button class="qty-btn" onclick="changeQty('${p.ID}',-1)">−</button><span class="qty-val" id="qty-${p.ID}">${curQtys[p.ID]||0}</span><button class="qty-btn" onclick="changeQty('${p.ID}',1)">+</button></div>
     </div>`;
   }).join('');
 }
 
-function getPrecio(prodId) {
-  if (curTipo === 'profesional' && curClienteId) {
-    const c = clientes.find(x => x.ID === curClienteId);
-    if (c && c.Precios && c.Precios[prodId] !== undefined) return parseFloat(c.Precios[prodId]);
+function getPrecio(prodId){
+  if(curTipo==='profesional'&&curClienteId){
+    const c=clientes.find(x=>x.ID===curClienteId);
+    if(c&&c.TarifaID){const t=tarifas.find(x=>x.TarifaID===c.TarifaID&&x.ProductoID===prodId);if(t)return parseFloat(t.Precio)||0;}
   }
-  const p = productos.find(x => x.ID === prodId);
-  return p ? parseFloat(p.PVP) || 0 : 0;
+  return parseFloat(productos.find(p=>p.ID===prodId)?.PVP)||0;
 }
 
-function calcTotal() {
-  return productos.reduce((sum, p) => sum + (curQtys[p.ID]||0) * getPrecio(p.ID), 0);
+function calcTotal(){return productos.reduce((s,p)=>s+(curQtys[p.ID]||0)*getPrecio(p.ID),0);}
+
+function updateTotal(){
+  const t=calcTotal();
+  const el=document.getElementById('total-display');
+  const elI=document.getElementById('total-iva');
+  if(el)el.textContent='€'+t.toFixed(2);
+  if(elI)elI.textContent='Con IVA (4%): €'+(t*1.04).toFixed(2);
 }
 
-function updateTotal() {
-  const t = calcTotal();
-  const el = document.getElementById('total-display');
-  const elIva = document.getElementById('total-iva');
-  if (el) el.textContent = '€' + t.toFixed(2);
-  if (elIva) elIva.textContent = 'Con IVA (4%): €' + (t * 1.04).toFixed(2);
-}
-
-function changeQty(prodId, delta) {
-  curQtys[prodId] = Math.max(0, (curQtys[prodId]||0) + delta);
-  const el = document.getElementById('qty-' + prodId);
-  if (el) el.textContent = curQtys[prodId];
+function changeQty(prodId,delta){
+  curQtys[prodId]=Math.max(0,(curQtys[prodId]||0)+delta);
+  const el=document.getElementById('qty-'+prodId);
+  if(el)el.textContent=curQtys[prodId];
   updateTotal();
 }
 
-function setTipo(t) {
-  curTipo = t; curClienteId = null; curQtys = {};
-  document.getElementById('tt-part').className = t==='particular' ? 'tt-btn ap' : 'tt-btn';
-  document.getElementById('tt-prof').className = t==='profesional' ? 'tt-btn ab' : 'tt-btn';
-
-  const campoCli = document.getElementById('campo-cliente');
-  const campoExtra = document.getElementById('campo-prof-extra');
-
-  if (t === 'particular') {
-    campoCli.innerHTML = `<label class="f-lbl">Cliente</label><input type="text" id="f-cli" placeholder="Nombre del cliente"/>`;
-    campoExtra.classList.add('hidden');
+function setTipo(t){
+  curTipo=t;curClienteId=null;curQtys={};
+  document.getElementById('tt-part').className=t==='particular'?'tt-btn ap':'tt-btn';
+  document.getElementById('tt-prof').className=t==='profesional'?'tt-btn ab':'tt-btn';
+  const cc=document.getElementById('campo-cliente');
+  if(t==='particular'){
+    cc.innerHTML=`<label class="f-lbl">Cliente</label><input type="text" id="f-cli" placeholder="Nombre del cliente"/>`;
   } else {
-    const opts = clientes.map(c => `<option value="${c.ID}">${c.Nombre}</option>`).join('');
-    campoCli.innerHTML = `<label class="f-lbl">Cliente</label><select id="f-cli-sel" onchange="onClienteChange(this.value)"><option value="">Seleccionar cliente...</option>${opts}</select>`;
-    campoExtra.classList.remove('hidden');
+    const opts=clientes.map(c=>`<option value="${c.ID}">${c.Nombre}</option>`).join('');
+    cc.innerHTML=`<label class="f-lbl">Cliente</label><select id="f-cli-sel" onchange="onClienteChange(this.value)"><option value="">Seleccionar cliente...</option>${opts}</select>`;
   }
-  document.getElementById('prod-selector').innerHTML = buildProdSelector();
+  document.getElementById('prod-selector').innerHTML=buildProdSelector();
   updateTotal();
 }
 
-function onClienteChange(val) {
-  curClienteId = val || null;
-  document.getElementById('prod-selector').innerHTML = buildProdSelector();
+function onClienteChange(val){
+  curClienteId=val||null;
+  curQtys={};
+  document.getElementById('prod-selector').innerHTML=buildProdSelector();
   updateTotal();
 }
 
-async function savePedido() {
-  const lineas = productos
-    .filter(p => (curQtys[p.ID]||0) > 0)
-    .map(p => ({ id: p.ID, nombre: `${p.Nombre} ${p.Formato}`, qty: curQtys[p.ID], unidad: p.Unidad }));
-
-  if (!lineas.length) { showToast('Añade al menos un producto'); return; }
-
-  let clienteNombre = '';
-  if (curTipo === 'particular') {
-    clienteNombre = document.getElementById('f-cli')?.value.trim() || '';
-  } else {
-    const sel = document.getElementById('f-cli-sel');
-    clienteNombre = sel ? sel.options[sel.selectedIndex]?.text : '';
-    if (!curClienteId) { showToast('Selecciona un cliente'); return; }
-  }
-  if (!clienteNombre) { showToast('Introduce el nombre del cliente'); return; }
-
-  const fecha = document.getElementById('f-fecha')?.value || new Date().toISOString().slice(0,10);
-  const hora = document.getElementById('f-hora')?.value || '';
-  const total = calcTotal();
-  const newId = 'P-' + String(pedidos.length + 1).padStart(3,'0');
-  const albId = curTipo === 'profesional' ? 'ALB-' + String(albaranes.length + 1).padStart(3,'0') : '';
-
-  const pedido = {
-    ID: newId, Cliente: clienteNombre, Tipo: curTipo,
-    Fecha: fecha, Hora: hora, Estado: 'pendiente',
-    Total: total.toFixed(2), Albaran: albId,
-    Lineas: JSON.stringify(lineas)
-  };
-
+async function savePedido(){
+  const lineas=productos.filter(p=>(curQtys[p.ID]||0)>0).map(p=>({id:p.ID,nombre:`${p.Nombre} ${p.Formato}`,qty:curQtys[p.ID],unidad:p.Unidad||'ud'}));
+  if(!lineas.length){showToast('Añade al menos un producto');return;}
+  let clienteNombre='';
+  if(curTipo==='particular'){clienteNombre=document.getElementById('f-cli')?.value.trim()||'';}
+  else{const s=document.getElementById('f-cli-sel');clienteNombre=s?s.options[s.selectedIndex]?.text:'';}
+  if(!clienteNombre||(curTipo==='profesional'&&!curClienteId)){showToast('Selecciona un cliente');return;}
+  const fecha=document.getElementById('f-fecha')?.value||new Date().toISOString().slice(0,10);
+  const hora=document.getElementById('f-hora')?.value||'';
+  const total=calcTotal();
+  const newId='P-'+String(pedidos.length+1).padStart(3,'0');
+  const albId=curTipo==='profesional'?'ALB-'+String(albaranes.length+1).padStart(3,'0'):'';
+  const pedido={ID:newId,Cliente:clienteNombre,Tipo:curTipo,Fecha:fecha,Hora:hora,Estado:'pendiente',Total:total.toFixed(2),Albaran:albId,Lineas:JSON.stringify(lineas)};
   showToast('Guardando...');
-  await api({ action: 'savePedido', data: JSON.stringify(pedido) });
-
-  if (albId) {
-    const albaran = {
-      ID: albId, ClienteID: clienteNombre, Fecha: fecha,
-      Lineas: JSON.stringify(lineas),
-      Importe: total.toFixed(2), Facturado: 'NO'
-    };
-    await api({ action: 'saveAlbaran', data: JSON.stringify(albaran) });
-    albaranes.push({ ...albaran, Lineas: lineas });
-
-    // Actualizar pendiente del cliente
-    const cliente = clientes.find(c => c.ID === curClienteId);
-    if (cliente) {
-      const nuevoPendiente = (parseFloat(cliente.Pendiente)||0) + total;
-      await api({ action: 'updateCliente', data: JSON.stringify({ ID: curClienteId, Pendiente: nuevoPendiente.toFixed(2), UltimoPedido: fecha }) });
-      cliente.Pendiente = nuevoPendiente.toFixed(2);
-      cliente.UltimoPedido = fecha;
+  await api({action:'savePedido',data:JSON.stringify(pedido)});
+  if(albId){
+    const alb={ID:albId,ClienteID:clienteNombre,Fecha:fecha,Lineas:JSON.stringify(lineas),Importe:total.toFixed(2),Facturado:'NO'};
+    await api({action:'saveAlbaran',data:JSON.stringify(alb)});
+    albaranes.push({...alb,Lineas:lineas});
+    const cliente=clientes.find(c=>c.ID===curClienteId);
+    if(cliente){
+      const np=(parseFloat(cliente.Pendiente)||0)+total;
+      await api({action:'updateCliente',data:JSON.stringify({ID:curClienteId,Pendiente:np.toFixed(2),UltimoPedido:fecha})});
+      cliente.Pendiente=np.toFixed(2);cliente.UltimoPedido=fecha;
     }
   }
-
-  pedidos.push({ ...pedido, Lineas: lineas });
-  closeModal();
-  renderAll();
-  showToast('✓ Pedido guardado');
+  pedidos.push({...pedido,Lineas:lineas});
+  closeModal();renderAll();showToast('✓ Pedido guardado');
 }
 
 // --- DETALLE PEDIDO ---
-function openDetallePedido(id) {
-  const p = pedidos.find(x => x.ID === id);
-  if (!p) return;
-  const totalIva = (parseFloat(p.Total)||0) * 1.04;
-  const estadoActual = p.Estado;
-  openModal(`Pedido ${p.ID}`, `
-    <div style="margin-bottom:14px">
-      <div style="font-size:16px;font-weight:600;margin-bottom:4px">${p.Cliente}</div>
-      <div style="font-size:13px;color:var(--text2)">${fmtDate(p.Fecha)} · ${p.Hora||''}</div>
-    </div>
-    <div class="card-body" style="margin-bottom:12px">${resumeLineas(p.Lineas)}</div>
+function openDetallePedido(id){
+  const p=pedidos.find(x=>x.ID===id);
+  if(!p)return;
+  const totalIva=((parseFloat(p.Total)||0)*1.04).toFixed(2);
+  openModal(`Pedido ${p.ID}`,`
+    <div style="margin-bottom:12px"><div style="font-size:16px;font-weight:700">${p.Cliente}</div><div style="font-size:13px;color:var(--text2)">${fmtDate(p.Fecha)} · ${p.Hora||''}</div></div>
+    <div style="font-size:13px;color:var(--text2);margin-bottom:12px;line-height:1.6">${resumeLineas(p.Lineas)}</div>
     <div class="total-box" style="margin-bottom:14px">
       <span class="total-lbl">Total</span>
-      <div style="text-align:right">
-        <div class="total-val">€${totalIva.toFixed(2)}</div>
-        <div class="iva-note">Sin IVA: €${parseFloat(p.Total).toFixed(2)}</div>
-      </div>
+      <div style="text-align:right"><div class="total-val">€${totalIva}</div><div class="total-iva">Sin IVA: €${parseFloat(p.Total).toFixed(2)}</div></div>
     </div>
-    <div class="f-lbl">Cambiar estado</div>
+    <div class="f-lbl">Estado del pedido</div>
     <div class="status-row">
-      <button class="status-btn ${estadoActual==='pendiente'?'active-pend':''}" onclick="cambiarEstado('${id}','pendiente')">Pendiente</button>
-      <button class="status-btn ${estadoActual==='listo'?'active-listo':''}" onclick="cambiarEstado('${id}','listo')">Listo</button>
-      <button class="status-btn ${estadoActual==='entregado'?'active-entre':''}" onclick="cambiarEstado('${id}','entregado')">Entregado</button>
+      <button class="status-btn ${p.Estado==='pendiente'?'sp':''}" onclick="cambiarEstado('${id}','pendiente')">Pendiente</button>
+      <button class="status-btn ${p.Estado==='listo'?'sl':''}" onclick="cambiarEstado('${id}','listo')">Listo</button>
+      <button class="status-btn ${p.Estado==='entregado'?'se':''}" onclick="cambiarEstado('${id}','entregado')">Entregado</button>
     </div>
-    <button class="btn-cancel" onclick="closeModal()" style="margin-top:14px">Cerrar</button>
-  `);
+    <button class="btn-secondary" onclick="closeModal()" style="margin-top:14px">Cerrar</button>`);
 }
 
-async function cambiarEstado(id, estado) {
-  await api({ action: 'updatePedido', data: JSON.stringify({ ID: id, Estado: estado }) });
-  const p = pedidos.find(x => x.ID === id);
-  if (p) p.Estado = estado;
-  closeModal();
-  renderAll();
-  showToast('✓ Estado actualizado');
+async function cambiarEstado(id,estado){
+  await api({action:'updatePedido',data:JSON.stringify({ID:id,Estado:estado})});
+  const p=pedidos.find(x=>x.ID===id);
+  if(p)p.Estado=estado;
+  closeModal();renderAll();showToast('✓ Estado actualizado');
 }
 
-// --- NUEVO CLIENTE ---
-function openNuevoCliente() {
-  const tarifaInputs = productos.map(p =>
-    `<div class="prod-item">
-      <div class="prod-info"><div class="prod-name">${p.Nombre} <span style="font-size:11px;color:var(--text3)">${p.Formato}</span></div><div class="prod-price">PVP: €${parseFloat(p.PVP||0).toFixed(2)}</div></div>
-      <input type="number" id="tp-${p.ID}" placeholder="—" step="0.01" style="width:70px;padding:6px;border:1px solid var(--border2);border-radius:6px;font-size:14px;text-align:right"/>
-    </div>`
-  ).join('');
-
-  openModal('Nuevo cliente profesional', `
+// --- NUEVO/EDITAR CLIENTE ---
+function openNuevoCliente(){
+  const tarifaOpts=getTarifasOpts();
+  openModal('Nuevo cliente profesional',`
     <div class="f-row"><label class="f-lbl">Nombre del negocio</label><input type="text" id="f-neg" placeholder="Café Ejemplo"/></div>
     <div class="f-row"><label class="f-lbl">NIF / CIF</label><input type="text" id="f-nif" placeholder="B12345678"/></div>
     <div class="f-row"><label class="f-lbl">Persona de contacto</label><input type="text" id="f-con" placeholder="Nombre y apellido"/></div>
     <div class="f-row"><label class="f-lbl">Teléfono</label><input type="tel" id="f-tel" placeholder="600 000 000"/></div>
     <div class="f-row"><label class="f-lbl">Dirección</label><input type="text" id="f-dir" placeholder="Calle, número, ciudad"/></div>
-    <div class="divider"></div>
-    <div class="f-lbl" style="margin-bottom:8px">Tarifa pactada (€ sin IVA) — deja en blanco los que no compre</div>
-    <div class="prod-selector">${tarifaInputs}</div>
+    <div class="f-row"><label class="f-lbl">Tarifa asignada</label><select id="f-tarifa"><option value="">Sin tarifa</option>${tarifaOpts}</select></div>
     <button class="btn-ok" onclick="saveCliente()">Guardar cliente</button>
-    <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
-  `);
+    <button class="btn-secondary" onclick="closeModal()">Cancelar</button>`);
 }
 
-async function saveCliente() {
-  const neg = document.getElementById('f-neg')?.value.trim() || '';
-  const nif = document.getElementById('f-nif')?.value.trim() || '';
-  if (!neg || !nif) { showToast('Nombre y NIF obligatorios'); return; }
+function openEditarCliente(id){
+  const c=clientes.find(x=>x.ID===id);
+  if(!c)return;
+  const tarifaOpts=getTarifasOpts(c.TarifaID);
+  openModal('Editar cliente',`
+    <div class="f-row"><label class="f-lbl">Nombre del negocio</label><input type="text" id="f-neg" value="${c.Nombre}"/></div>
+    <div class="f-row"><label class="f-lbl">NIF / CIF</label><input type="text" id="f-nif" value="${c.NIF}"/></div>
+    <div class="f-row"><label class="f-lbl">Persona de contacto</label><input type="text" id="f-con" value="${c.Contacto||''}"/></div>
+    <div class="f-row"><label class="f-lbl">Teléfono</label><input type="tel" id="f-tel" value="${c.Telefono||''}"/></div>
+    <div class="f-row"><label class="f-lbl">Dirección</label><input type="text" id="f-dir" value="${c.Direccion||''}"/></div>
+    <div class="f-row"><label class="f-lbl">Tarifa asignada</label><select id="f-tarifa"><option value="">Sin tarifa</option>${tarifaOpts}</select></div>
+    <button class="btn-ok" onclick="saveEditarCliente('${id}')">Guardar cambios</button>
+    <button class="btn-secondary" onclick="closeModal()">Cancelar</button>`);
+}
 
-  const precios = {};
-  productos.forEach(p => {
-    const v = parseFloat(document.getElementById('tp-'+p.ID)?.value);
-    if (!isNaN(v) && v > 0) precios[p.ID] = v;
-  });
+function getTarifasOpts(selId=''){
+  const ids=[...new Set(tarifas.filter(t=>t.ProductoID).map(t=>t.TarifaID))];
+  return ids.map(tid=>{const n=getTarifaNombre(tid);return`<option value="${tid}" ${tid===selId?'selected':''}>${n}</option>`;}).join('');
+}
 
-  const newId = 'C-' + String(clientes.length + 1).padStart(3,'0');
-  const hoy = new Date().toISOString().slice(0,10);
-  const cliente = {
-    ID: newId,
-    Nombre: neg, NIF: nif,
-    Contacto: document.getElementById('f-con')?.value.trim() || '',
-    Telefono: document.getElementById('f-tel')?.value.trim() || '',
-    Direccion: document.getElementById('f-dir')?.value.trim() || '',
-    Alta: hoy, UltimoPedido: '', Pendiente: '0',
-    Precios: JSON.stringify(precios)
-  };
-
+async function saveCliente(){
+  const neg=document.getElementById('f-neg')?.value.trim()||'';
+  const nif=document.getElementById('f-nif')?.value.trim()||'';
+  if(!neg||!nif){showToast('Nombre y NIF obligatorios');return;}
+  const tid=document.getElementById('f-tarifa')?.value||'';
+  const newId='C-'+String(clientes.length+1).padStart(3,'0');
+  const hoy=new Date().toISOString().slice(0,10);
+  const c={ID:newId,Nombre:neg,NIF:nif,Contacto:document.getElementById('f-con')?.value.trim()||'',Telefono:document.getElementById('f-tel')?.value.trim()||'',Direccion:document.getElementById('f-dir')?.value.trim()||'',Alta:hoy,UltimoPedido:'',Pendiente:'0',TarifaID:tid};
   showToast('Guardando...');
-  await api({ action: 'saveCliente', data: JSON.stringify(cliente) });
-  clientes.push({ ...cliente, Precios: precios });
-  closeModal();
-  renderClientes();
-  showToast('✓ Cliente guardado');
+  await api({action:'saveCliente',data:JSON.stringify(c)});
+  clientes.push(c);
+  closeModal();renderClientes('');showToast('✓ Cliente guardado');
 }
+
+async function saveEditarCliente(id){
+  const c=clientes.find(x=>x.ID===id);
+  if(!c)return;
+  c.Nombre=document.getElementById('f-neg')?.value.trim()||c.Nombre;
+  c.NIF=document.getElementById('f-nif')?.value.trim()||c.NIF;
+  c.Contacto=document.getElementById('f-con')?.value.trim()||'';
+  c.Telefono=document.getElementById('f-tel')?.value.trim()||'';
+  c.Direccion=document.getElementById('f-dir')?.value.trim()||'';
+  c.TarifaID=document.getElementById('f-tarifa')?.value||'';
+  await api({action:'updateCliente',data:JSON.stringify(c)});
+  closeModal();
+  openClienteDetail(id);
+  showToast('✓ Cliente actualizado');
+}
+
+// --- NAV / SCREEN ---
+function switchTab(tab,el){
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  ['pedidos','clientes','albaranes','tarifas'].forEach(s=>{
+    document.getElementById('scr-'+s).classList.toggle('active',s===tab);
+  });
+  document.getElementById('scr-cliente-detail').classList.remove('active');
+  document.getElementById('scr-tarifa-detail').classList.remove('active');
+  setHdr(tab==='pedidos'?'KO<span style="color:var(--a400)">BO</span>':tab.charAt(0).toUpperCase()+tab.slice(1),false);
+  prevScreen=null;
+}
+
+function showScreen(scr,prev){
+  ['scr-pedidos','scr-clientes','scr-albaranes','scr-tarifas','scr-cliente-detail','scr-tarifa-detail'].forEach(s=>{
+    document.getElementById(s).classList.toggle('active',s===scr);
+  });
+  prevScreen=prev;
+}
+
+function goBack(){
+  if(!prevScreen)return;
+  showScreen(prevScreen,null);
+  const tab=prevScreen.replace('scr-','');
+  setHdr(tab.charAt(0).toUpperCase()+tab.slice(1),false);
+  document.querySelectorAll('.nb').forEach((b,i)=>{
+    b.classList.toggle('active',['pedidos','clientes','albaranes','tarifas'][i]===tab);
+  });
+  if(tab==='clientes')renderClientes('');
+  if(tab==='tarifas')renderTarifas();
+}
+
+function setHdr(title,showBack){
+  document.getElementById('hdr-title').innerHTML=title;
+  document.getElementById('hdr-back').style.display=showBack?'block':'none';
+  document.getElementById('hdr-date').style.display=showBack?'none':'block';
+}
+
+// --- MODAL ---
+function openModal(title,body){
+  document.getElementById('modal-title').textContent=title;
+  document.getElementById('modal-body').innerHTML=body;
+  document.getElementById('modal').classList.add('open');
+}
+function closeModal(){document.getElementById('modal').classList.remove('open');}
+function closeMOut(e){if(e.target===document.getElementById('modal'))closeModal();}
 
 // --- TOAST ---
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2500);
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
 }
 
 // --- INIT ---
-const d = new Date();
-document.getElementById('header-date').textContent = d.toLocaleDateString('es-ES', {weekday:'long', day:'numeric', month:'long'});
+const d=new Date();
+document.getElementById('hdr-date').textContent=d.toLocaleDateString('es-ES',{weekday:'short',day:'numeric',month:'short'});
 loadAll();
 </script>
 </body>
