@@ -8,176 +8,305 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 :root{
-  --a50:#FAEEDA;--a100:#FAC775;--a200:#EF9F27;--a400:#BA7517;--a600:#854F0B;
-  --b50:#E6F1FB;--b200:#85B7EB;--b400:#378ADD;--b600:#185FA5;--b800:#0C447C;
-  --g50:#EAF3DE;--g400:#639922;--g800:#27500A;
-  --p50:#EEEDFE;--p400:#7F77DD;--p600:#534AB7;
-  --r50:#FCEBEB;--r400:#E24B4A;--r800:#791F1F;
-  --gr50:#F1EFE8;--gr400:#888780;--gr600:#5F5E5A;
-  --t50:#E1F5EE;--t400:#1D9E75;--t600:#0F6E56;
-  --bg:#fff;--bg2:#f5f5f3;--bg3:#eee;
-  --text:#1a1a1a;--text2:#666;--text3:#999;
-  --border:rgba(0,0,0,0.1);--border2:rgba(0,0,0,0.18);
-  --rad:12px;--rad-sm:8px;
+  /* Paleta corporativa KOBO: blanco, negro, ocre/marrón dorado */
+  --ocre:#B8892A;        /* color principal del logo */
+  --ocre-light:#D4A843;  /* ocre claro para hovers */
+  --ocre-dark:#8A6318;   /* ocre oscuro para activos */
+  --ocre-bg:#FDF8EF;     /* fondo ocre muy suave */
+  --ocre-tint:#F7EDD8;   /* tinte ocre para badges, chips */
+  --ocre-border:#DFC27A; /* borde ocre suave */
+
+  --black:#111111;       /* negro principal del logo */
+  --black2:#1C1C1C;
+  --black3:#2A2A2A;
+
+  /* Semánticos - todos en tono ocre/tierra */
+  --a50:#FDF8EF;--a100:#F5E4B8;--a200:#DFC27A;--a400:#B8892A;--a600:#8A6318;
+  /* Azul para prof badge - neutro */
+  --b50:#F0F4F8;--b200:#A8BDD0;--b400:#5A85A8;--b600:#3A6080;--b800:#1E3D55;
+  /* Verde para listo */
+  --g50:#F0F5EB;--g400:#5A8A30;--g800:#2A5010;
+  /* Morado para albarán */
+  --p50:#F3F1FB;--p400:#7068C0;--p600:#4A4295;
+  /* Rojo peligro */
+  --r50:#FDF0F0;--r400:#CC4040;--r800:#6E1E1E;
+  /* Gris entregado */
+  --gr50:#F4F3F0;--gr400:#888078;--gr600:#5A5550;
+  /* Teal */
+  --t50:#EEF7F3;--t400:#2A8A65;--t600:#1A6048;
+
+  /* Fondos y superficies — blancos y cremas muy suaves */
+  --bg:#FFFFFF;
+  --bg2:#F9F7F4;
+  --bg3:#F0EDE6;
+
+  /* Texto */
+  --text:#111111;
+  --text2:#555555;
+  --text3:#999999;
+
+  /* Bordes */
+  --border:rgba(0,0,0,0.08);
+  --border2:rgba(0,0,0,0.14);
+
+  --rad:14px;--rad-sm:9px;
+  --shadow:0 1px 8px rgba(0,0,0,0.06);
 }
+
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg2);color:var(--text);min-height:100vh;padding-bottom:72px;}
 
-/* Loading */
+/* ── LOGIN (se mantiene oscuro, es la pantalla de bienvenida) ── */
+#login-screen{position:fixed;inset:0;background:var(--black);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:1000;padding:32px 24px;}
+#login-screen.hidden{display:none;}
+.login-logo{margin-bottom:32px;display:flex;flex-direction:column;align-items:center;gap:14px;}
+.login-logo svg{width:220px;height:64px;}
+.login-subtitle{font-size:12px;color:rgba(255,255,255,.35);letter-spacing:.18em;text-transform:uppercase;margin-top:2px;}
+.login-card{background:var(--black2);border-radius:20px;padding:24px;width:100%;max-width:360px;border:1px solid rgba(255,255,255,.08);}
+.login-card h3{font-size:16px;font-weight:600;color:#fff;margin-bottom:20px;}
+.login-input-wrap{margin-bottom:14px;}
+.login-input-wrap label{font-size:12px;color:rgba(255,255,255,.45);display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:.07em;}
+.login-input-wrap input{width:100%;padding:13px 14px;background:var(--black3);border:1px solid rgba(255,255,255,.1);border-radius:10px;font-size:15px;color:#fff;outline:none;transition:border-color .2s;}
+.login-input-wrap input:focus{border-color:var(--ocre);}
+.login-btn{width:100%;padding:14px;background:var(--ocre);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;margin-top:6px;letter-spacing:.03em;}
+.login-btn:active{background:var(--ocre-dark);}
+.login-biometric{width:100%;padding:12px;background:transparent;color:rgba(255,255,255,.45);border:1px solid rgba(255,255,255,.1);border-radius:10px;font-size:14px;cursor:pointer;margin-top:10px;display:flex;align-items:center;justify-content:center;gap:8px;}
+.login-biometric:active{background:rgba(255,255,255,.05);}
+.login-error{font-size:13px;color:#f87171;text-align:center;margin-top:10px;min-height:18px;}
+.login-setup{font-size:12px;color:rgba(255,255,255,.3);text-align:center;margin-top:16px;cursor:pointer;text-decoration:underline;}
+
+/* ── LOADING ── */
 #loading{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;gap:12px;}
-#loading h2{font-size:22px;font-weight:700;color:var(--a400);}
+#loading h2{font-size:22px;font-weight:700;color:var(--ocre);}
 #loading p{font-size:14px;color:var(--text2);}
-.spinner{width:36px;height:36px;border:3px solid var(--a50);border-top-color:var(--a400);border-radius:50%;animation:spin .8s linear infinite;}
+.spinner{width:36px;height:36px;border:3px solid var(--ocre-tint);border-top-color:var(--ocre);border-radius:50%;animation:spin .8s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
 
-/* Header */
-.hdr{background:var(--bg);border-bottom:0.5px solid var(--border);padding:12px 16px;position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:10px;}
+/* ── HEADER: blanco con borde suave, logo negro+ocre ── */
+.hdr{background:var(--bg);border-bottom:1px solid var(--border);padding:11px 16px;position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:10px;}
 .hdr-back{background:none;border:none;font-size:20px;cursor:pointer;color:var(--text2);padding:0 4px;}
-.hdr-title{font-size:18px;font-weight:700;flex:1;}
-.hdr-title span{color:var(--a400);}
-.hdr-date{font-size:12px;color:var(--text2);}
+.hdr-logo{display:flex;align-items:center;gap:8px;flex:1;}
+.hdr-title{font-size:18px;font-weight:800;color:var(--black);letter-spacing:1px;}
+.hdr-title span{color:var(--ocre);}
+.hdr-date{font-size:12px;color:var(--text3);}
 
-/* Bottom nav */
-.bnav{position:fixed;bottom:0;left:0;right:0;background:var(--bg);border-top:0.5px solid var(--border);display:flex;z-index:50;}
-.nb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px;border:none;background:transparent;cursor:pointer;gap:3px;color:var(--text3);font-size:10px;}
-.nb.active{color:var(--a400);}
+/* ── BOTTOM NAV: blanco, activo en ocre ── */
+.bnav{position:fixed;bottom:0;left:0;right:0;background:var(--bg);border-top:1px solid var(--border);display:flex;z-index:50;}
+.nb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px;border:none;background:transparent;cursor:pointer;gap:3px;color:var(--text3);font-size:10px;transition:color .15s;}
+.nb.active{color:var(--ocre);}
 .nb-icon{font-size:22px;line-height:1;}
 
-/* Screens */
+/* ── SCREENS ── */
 .screen{display:none;padding:14px 16px;}
 .screen.active{display:block;}
 
-/* Stats */
+/* ── STATS ── */
 .stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
-.stat{background:var(--bg);border-radius:var(--rad-sm);padding:12px;border:0.5px solid var(--border);}
-.stat-lbl{font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px;}
-.stat-val{font-size:24px;font-weight:700;color:var(--text);}
+.stat{background:var(--bg);border-radius:var(--rad-sm);padding:12px;border:1px solid var(--border);box-shadow:var(--shadow);}
+.stat-lbl{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:3px;}
+.stat-val{font-size:24px;font-weight:700;color:var(--black);}
 .stat-sub{font-size:11px;color:var(--text3);margin-top:1px;}
 
-/* Sec header */
+/* ── SEC HEADER ── */
 .sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
-.sec-title{font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.07em;}
-.btn-new{font-size:13px;padding:7px 16px;border-radius:20px;border:none;background:var(--a400);color:#fff;cursor:pointer;font-weight:500;}
+.sec-title{font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;}
+.btn-new{font-size:13px;padding:7px 16px;border-radius:20px;border:none;background:var(--ocre);color:#fff;cursor:pointer;font-weight:600;transition:background .15s;}
+.btn-new:active{background:var(--ocre-dark);}
 
-/* Search */
+/* ── SEARCH ── */
 .search-wrap{position:relative;margin-bottom:12px;}
-.search-wrap input{width:100%;padding:10px 12px 10px 36px;border:1px solid var(--border2);border-radius:var(--rad-sm);font-size:14px;background:var(--bg);color:var(--text);}
+.search-wrap input{width:100%;padding:10px 12px 10px 36px;border:1px solid var(--border2);border-radius:var(--rad-sm);font-size:14px;background:var(--bg);color:var(--text);outline:none;transition:border-color .2s;}
+.search-wrap input:focus{border-color:var(--ocre);}
 .search-icon{position:absolute;left:11px;top:50%;transform:translateY(-50%);font-size:16px;color:var(--text3);}
 
-/* Chips */
+/* ── CHIPS ── */
 .chips{display:flex;gap:6px;margin-bottom:12px;overflow-x:auto;padding-bottom:2px;}
-.chip{font-size:12px;padding:5px 12px;border-radius:20px;border:0.5px solid var(--border2);background:var(--bg);color:var(--text2);cursor:pointer;white-space:nowrap;}
-.chip.active{background:var(--a400);color:#fff;border-color:var(--a400);}
+.chip{font-size:12px;padding:5px 14px;border-radius:20px;border:1px solid var(--border2);background:var(--bg);color:var(--text2);cursor:pointer;white-space:nowrap;transition:all .15s;}
+.chip.active{background:var(--ocre);color:#fff;border-color:var(--ocre);font-weight:600;}
 
-/* Cards */
-.card{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--rad);padding:14px;margin-bottom:10px;cursor:pointer;}
-.card:active{opacity:.85;}
+/* ── CARDS ── */
+.card{background:var(--bg);border:1px solid var(--border);border-radius:var(--rad);padding:14px;margin-bottom:10px;cursor:pointer;box-shadow:var(--shadow);}
+.card:active{background:var(--bg2);}
 .card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px;}
-.card-name{font-size:15px;font-weight:600;color:var(--text);}
+.card-name{font-size:15px;font-weight:600;color:var(--black);}
 .card-sub{font-size:11px;color:var(--text3);margin-top:2px;}
 .card-body{font-size:13px;color:var(--text2);margin-bottom:8px;line-height:1.5;}
 .card-foot{display:flex;align-items:center;justify-content:space-between;}
-.badge{font-size:11px;padding:3px 9px;border-radius:20px;font-weight:500;}
-.b-pend{background:var(--a50);color:var(--a600);}
+
+/* ── BADGES — todos derivados de ocre y neutros ── */
+.badge{font-size:11px;padding:3px 10px;border-radius:20px;font-weight:600;}
+.b-pend{background:var(--ocre-tint);color:var(--ocre-dark);}
 .b-listo{background:var(--g50);color:var(--g800);}
 .b-entre{background:var(--gr50);color:var(--gr600);}
-.b-part{background:var(--a50);color:var(--a600);}
-.b-prof{background:var(--b50);color:var(--b600);}
-.b-alb{background:var(--p50);color:var(--p600);}
-.price-lbl{font-size:15px;font-weight:600;}
+.b-part{background:var(--bg3);color:var(--text2);}
+.b-prof{background:var(--ocre-tint);color:var(--ocre-dark);}
+.b-alb{background:var(--bg3);color:var(--text2);}
+.price-lbl{font-size:15px;font-weight:700;color:var(--black);}
 .time-lbl{font-size:12px;color:var(--text3);}
-.empty{text-align:center;padding:3rem 1rem;color:var(--text2);font-size:14px;}
+.empty{text-align:center;padding:3rem 1rem;color:var(--text3);font-size:14px;}
 
-/* Client detail */
-.detail-section{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--rad);padding:14px;margin-bottom:10px;}
-.detail-section h4{font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px;}
-.detail-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:0.5px solid var(--border);font-size:14px;}
+/* ── DETAIL SECTIONS ── */
+.detail-section{background:var(--bg);border:1px solid var(--border);border-radius:var(--rad);padding:14px;margin-bottom:10px;box-shadow:var(--shadow);}
+.detail-section h4{font-size:11px;font-weight:700;color:var(--ocre);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px;border-bottom:1px solid var(--ocre-tint);padding-bottom:8px;}
+.detail-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:14px;}
 .detail-row:last-child{border-bottom:none;}
 .detail-row span:first-child{color:var(--text2);}
-.detail-row span:last-child{font-weight:500;color:var(--text);text-align:right;}
-.detail-row a{color:var(--b600);font-weight:500;}
-.avatar-lg{width:52px;height:52px;border-radius:50%;background:var(--b50);color:var(--b800);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;}
+.detail-row span:last-child{font-weight:500;color:var(--black);text-align:right;}
+.detail-row a{color:var(--ocre);font-weight:500;}
+.avatar-lg{width:52px;height:52px;border-radius:50%;background:var(--ocre-tint);color:var(--ocre-dark);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;}
 
-/* Tarifa rows */
-.tarifa-item{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:0.5px solid var(--border);gap:8px;}
+/* ── TARIFA ROWS ── */
+.tarifa-item{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border);gap:8px;}
 .tarifa-item:last-child{border-bottom:none;}
 .tarifa-prod{font-size:14px;color:var(--text);flex:1;}
-.tarifa-precio-val{font-size:14px;font-weight:600;color:var(--b600);min-width:52px;text-align:right;}
+.tarifa-precio-val{font-size:14px;font-weight:600;color:var(--ocre-dark);min-width:52px;text-align:right;}
 .tarifa-actions{display:flex;gap:6px;}
 .icon-btn{background:none;border:none;cursor:pointer;font-size:16px;padding:4px;color:var(--text3);}
-.icon-btn:hover{color:var(--text);}
+.icon-btn:hover{color:var(--black);}
 
-/* Tarifa cards */
-.tarifa-card{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--rad);padding:14px;margin-bottom:10px;cursor:pointer;}
-.tarifa-card:active{opacity:.85;}
+/* ── TARIFA CARDS ── */
+.tarifa-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--rad);padding:14px;margin-bottom:10px;cursor:pointer;box-shadow:var(--shadow);}
+.tarifa-card:active{background:var(--bg2);}
 .tarifa-card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
-.tarifa-card-name{font-size:15px;font-weight:600;color:var(--text);}
+.tarifa-card-name{font-size:15px;font-weight:600;color:var(--black);}
 .tarifa-card-count{font-size:12px;color:var(--text3);}
 .tarifa-preview{font-size:12px;color:var(--text2);line-height:1.6;}
 
-/* Modal */
-.modal-bd{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:flex-end;justify-content:center;}
+/* ── MODAL ── */
+.modal-bd{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;align-items:flex-end;justify-content:center;}
 .modal-bd.open{display:flex;}
-.modal{background:var(--bg);border-radius:20px 20px 0 0;padding:20px 16px 32px;width:100%;max-width:480px;max-height:92vh;overflow-y:auto;}
-.modal-handle{width:40px;height:4px;background:var(--border2);border-radius:2px;margin:0 auto 16px;}
-.modal-title{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--text);}
+.modal{background:var(--bg);border-radius:20px 20px 0 0;padding:20px 16px 36px;width:100%;max-width:480px;max-height:92vh;overflow-y:auto;}
+.modal-handle{width:40px;height:4px;background:var(--bg3);border-radius:2px;margin:0 auto 16px;}
+.modal-title{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--black);}
 .f-row{margin-bottom:12px;}
 .f-lbl{font-size:13px;color:var(--text2);margin-bottom:5px;display:block;font-weight:500;}
-.f-row input,.f-row select,.f-row textarea{width:100%;padding:11px 12px;border:1px solid var(--border2);border-radius:var(--rad-sm);font-size:15px;background:var(--bg);color:var(--text);outline:none;}
-.f-row input:focus,.f-row select:focus{border-color:var(--a400);}
+.f-row input,.f-row select,.f-row textarea{width:100%;padding:11px 12px;border:1px solid var(--border2);border-radius:var(--rad-sm);font-size:15px;background:var(--bg);color:var(--text);outline:none;transition:border-color .2s;}
+.f-row input:focus,.f-row select:focus,.f-row textarea:focus{border-color:var(--ocre);}
 .f-row textarea{height:72px;resize:none;}
 .f-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 .f-note{font-size:12px;color:var(--text3);margin-top:4px;}
-.divider{height:0.5px;background:var(--border);margin:14px 0;}
+.divider{height:1px;background:var(--border);margin:14px 0;}
 
-/* Type toggle */
+/* ── TYPE TOGGLE ── */
 .type-toggle{display:flex;gap:8px;margin-bottom:14px;}
-.tt-btn{flex:1;padding:10px;border-radius:var(--rad-sm);border:1px solid var(--border2);font-size:14px;cursor:pointer;background:var(--bg);color:var(--text2);font-weight:500;}
-.tt-btn.ap{background:var(--a50);color:var(--a600);border-color:var(--a200);}
-.tt-btn.ab{background:var(--b50);color:var(--b600);border-color:var(--b200);}
+.tt-btn{flex:1;padding:10px;border-radius:var(--rad-sm);border:1px solid var(--border2);font-size:14px;cursor:pointer;background:var(--bg2);color:var(--text2);font-weight:500;transition:all .15s;}
+.tt-btn.ap{background:var(--ocre-tint);color:var(--ocre-dark);border-color:var(--ocre-border);}
+.tt-btn.ab{background:var(--ocre-tint);color:var(--ocre-dark);border-color:var(--ocre-border);}
 
-/* Product selector */
+/* ── PRODUCT SELECTOR ── */
 .prod-selector{border:1px solid var(--border2);border-radius:var(--rad);overflow:hidden;margin-bottom:12px;}
-.prod-item{display:flex;align-items:center;padding:11px 14px;border-bottom:0.5px solid var(--border);gap:10px;}
+.prod-item{display:flex;align-items:center;padding:11px 14px;border-bottom:1px solid var(--border);gap:10px;}
 .prod-item:last-child{border-bottom:none;}
 .prod-info{flex:1;}
-.prod-name{font-size:14px;font-weight:500;color:var(--text);}
+.prod-name{font-size:14px;font-weight:500;color:var(--black);}
 .prod-price{font-size:12px;color:var(--text3);margin-top:1px;}
 .qty-ctrl{display:flex;align-items:center;gap:10px;}
-.qty-btn{width:30px;height:30px;border-radius:50%;border:1px solid var(--border2);background:var(--bg2);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text);}
-.qty-val{font-size:15px;font-weight:600;min-width:22px;text-align:center;}
+.qty-btn{width:30px;height:30px;border-radius:50%;border:1px solid var(--ocre-border);background:var(--ocre-tint);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ocre-dark);font-weight:600;}
+.qty-val{font-size:15px;font-weight:700;min-width:22px;text-align:center;color:var(--black);}
 
-/* Total box */
-.total-box{background:var(--a50);border-radius:var(--rad-sm);padding:14px;display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
-.total-lbl{font-size:14px;color:var(--a600);font-weight:500;}
-.total-val{font-size:22px;font-weight:700;color:var(--a600);}
-.total-iva{font-size:11px;color:var(--a400);margin-top:2px;text-align:right;}
+/* ── TOTAL BOX — tinte ocre suave ── */
+.total-box{background:var(--ocre-tint);border:1px solid var(--ocre-border);border-radius:var(--rad-sm);padding:14px;display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+.total-lbl{font-size:14px;color:var(--ocre-dark);font-weight:500;}
+.total-val{font-size:22px;font-weight:700;color:var(--ocre-dark);}
+.total-iva{font-size:11px;color:var(--ocre);margin-top:2px;text-align:right;}
 
-/* Buttons */
-.btn-ok{width:100%;padding:14px;background:var(--a400);color:#fff;border:none;border-radius:var(--rad);font-size:16px;font-weight:600;cursor:pointer;margin-top:6px;}
-.btn-ok:active{background:var(--a600);}
-.btn-secondary{width:100%;padding:11px;background:transparent;color:var(--text2);border:1px solid var(--border2);border-radius:var(--rad);font-size:14px;cursor:pointer;margin-top:8px;}
+/* ── BUTTONS ── */
+.btn-ok{width:100%;padding:14px;background:var(--ocre);color:#fff;border:none;border-radius:var(--rad);font-size:16px;font-weight:700;cursor:pointer;margin-top:6px;transition:background .15s;}
+.btn-ok:active{background:var(--ocre-dark);}
+.btn-secondary{width:100%;padding:11px;background:transparent;color:var(--text2);border:1px solid var(--border2);border-radius:var(--rad);font-size:14px;cursor:pointer;margin-top:8px;transition:background .15s;}
+.btn-secondary:active{background:var(--bg2);}
 .btn-danger-sm{padding:8px 14px;background:var(--r50);color:var(--r800);border:1px solid var(--r400);border-radius:var(--rad-sm);font-size:13px;cursor:pointer;}
 
-/* Status row */
+/* ── STATUS BUTTONS ── */
 .status-row{display:flex;gap:8px;margin-top:10px;}
-.status-btn{flex:1;padding:9px;border-radius:var(--rad-sm);border:1px solid var(--border2);font-size:13px;cursor:pointer;background:var(--bg2);color:var(--text2);font-weight:500;}
-.status-btn.sp{background:var(--a50);color:var(--a600);border-color:var(--a200);}
+.status-btn{flex:1;padding:9px;border-radius:var(--rad-sm);border:1px solid var(--border2);font-size:13px;cursor:pointer;background:var(--bg2);color:var(--text2);font-weight:500;transition:all .15s;}
+.status-btn.sp{background:var(--ocre-tint);color:var(--ocre-dark);border-color:var(--ocre-border);}
 .status-btn.sl{background:var(--g50);color:var(--g800);border-color:var(--g400);}
 .status-btn.se{background:var(--gr50);color:var(--gr600);border-color:var(--gr400);}
 
-/* Inline edit */
+/* ── INLINE EDIT ── */
 .inline-edit{display:flex;align-items:center;gap:6px;}
-.inline-edit input{width:80px;padding:6px 8px;border:1px solid var(--a400);border-radius:6px;font-size:14px;font-weight:600;color:var(--b600);text-align:right;}
-.inline-save{background:var(--a400);color:#fff;border:none;border-radius:6px;padding:6px 10px;font-size:12px;cursor:pointer;}
+.inline-edit input{width:80px;padding:6px 8px;border:1px solid var(--ocre);border-radius:6px;font-size:14px;font-weight:600;color:var(--ocre-dark);text-align:right;outline:none;}
+.inline-save{background:var(--ocre);color:#fff;border:none;border-radius:6px;padding:6px 10px;font-size:12px;cursor:pointer;font-weight:700;}
 
-/* Toast */
-.toast{position:fixed;bottom:84px;left:50%;transform:translateX(-50%);background:#1a1a1a;color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;z-index:300;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap;}
+/* ── TOAST ── */
+.toast{position:fixed;bottom:84px;left:50%;transform:translateX(-50%);background:var(--black);color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;z-index:300;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap;}
 .toast.show{opacity:1;}
+
+/* ── GESTIÓN DE USUARIOS ── */
+.user-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--rad);padding:14px;margin-bottom:10px;box-shadow:var(--shadow);}
+.user-card-top{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+.user-avatar{width:40px;height:40px;border-radius:50%;background:var(--ocre-tint);color:var(--ocre-dark);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;flex-shrink:0;}
+.user-info{flex:1;}
+.user-name{font-size:15px;font-weight:600;color:var(--black);}
+.user-role{font-size:12px;color:var(--text3);margin-top:1px;}
+.user-actions{display:flex;gap:6px;}
+.perm-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;}
+.perm-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--border);border-radius:8px;background:var(--bg2);cursor:pointer;transition:all .15s;}
+.perm-item.on{background:var(--ocre-tint);border-color:var(--ocre-border);}
+.perm-item input[type=checkbox]{width:16px;height:16px;accent-color:var(--ocre);cursor:pointer;flex-shrink:0;}
+.perm-label{font-size:13px;color:var(--text);font-weight:500;}
+.perm-item.on .perm-label{color:var(--ocre-dark);}
+.role-badge{font-size:11px;padding:2px 8px;border-radius:10px;font-weight:600;}
+.rb-admin{background:var(--ocre-tint);color:var(--ocre-dark);}
+.rb-user{background:var(--bg3);color:var(--text2);}
+
+/* ── PRODUCTOS CATÁLOGO ── */
+.prod-catalog-item{background:var(--bg);border:1px solid var(--border);border-radius:var(--rad);padding:14px;margin-bottom:10px;box-shadow:var(--shadow);}
+.prod-catalog-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px;}
+.prod-catalog-name{font-size:15px;font-weight:600;color:var(--black);}
+.prod-catalog-formato{font-size:12px;color:var(--text3);margin-top:2px;}
+.prod-catalog-prices{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
+.prod-catalog-price-tag{font-size:12px;padding:4px 10px;border-radius:12px;font-weight:500;}
+.pct-pvp{background:var(--ocre-tint);color:var(--ocre-dark);}
+.pct-prof{background:var(--bg3);color:var(--text2);}
+.pct-solo{background:var(--bg3);color:var(--text2);}
+.prod-catalog-actions{display:flex;gap:6px;}
+
+/* ── ALBARANES — generación factura ── */
+.alb-select-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);}
+.alb-select-item:last-child{border-bottom:none;}
+.alb-select-item input[type=checkbox]{width:18px;height:18px;accent-color:var(--ocre);cursor:pointer;}
+.alb-select-info{flex:1;}
+.alb-select-id{font-size:13px;font-weight:600;color:var(--black);}
+.alb-select-detail{font-size:12px;color:var(--text3);}
+.alb-select-importe{font-size:14px;font-weight:600;color:var(--ocre-dark);}
+.factura-total-box{background:var(--ocre-tint);border:1px solid var(--ocre-border);border-radius:var(--rad-sm);padding:14px;display:flex;justify-content:space-between;align-items:center;margin:14px 0;}
+.factura-total-lbl{font-size:13px;color:var(--ocre-dark);font-weight:500;}
+.factura-total-val{font-size:22px;font-weight:800;color:var(--ocre-dark);}
 </style>
 </head>
 <body>
 
-<div id="loading">
+<!-- LOGIN SCREEN -->
+<div id="login-screen">
+  <div class="login-logo">
+    <!-- Logo configurable: muestra imagen si está guardada, si no texto KOBO -->
+    <div id="login-logo-img-wrap">
+      <img id="login-logo-img" src="" alt="KOBO" style="display:none;max-width:220px;max-height:80px;object-fit:contain;"/>
+      <div id="login-logo-text" style="font-size:38px;font-weight:800;color:#fff;letter-spacing:4px;">KO<span style="color:var(--ocre)">BO</span></div>
+    </div>
+    <div class="login-subtitle">Panadería</div>
+  </div>
+  <div class="login-card">
+    <h3>Acceder</h3>
+    <div class="login-input-wrap">
+      <label>Usuario</label>
+      <input type="text" id="login-user" placeholder="admin" autocomplete="username"/>
+    </div>
+    <div class="login-input-wrap">
+      <label>Contraseña</label>
+      <input type="password" id="login-pass" placeholder="••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()"/>
+    </div>
+    <button class="login-btn" onclick="doLogin()">Entrar</button>
+    <button class="login-biometric" id="btn-biometric" style="display:none" onclick="doBiometric()">
+      <span style="font-size:20px">🔑</span> Face ID / Huella dactilar
+    </button>
+    <div class="login-error" id="login-error"></div>
+  </div>
+  <div class="login-setup" onclick="openLoginSetup()">⚙️ Configurar acceso y logo</div>
+</div>
+
+<div id="loading" style="display:none">
   <div class="spinner"></div>
   <h2>KOBO</h2>
   <p>Cargando datos...</p>
@@ -186,7 +315,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <!-- HEADER -->
 <div class="hdr" id="hdr">
   <button class="hdr-back" id="hdr-back" style="display:none" onclick="goBack()">←</button>
-  <div class="hdr-title" id="hdr-title">KO<span>BO</span></div>
+  <div class="hdr-logo" id="hdr-logo">
+    <!-- Logo configurable en header -->
+    <img id="hdr-logo-img" src="" alt="" style="display:none;height:28px;object-fit:contain;"/>
+    <div class="hdr-title" id="hdr-title">KO<span>BO</span></div>
+  </div>
   <div class="hdr-date" id="hdr-date"></div>
 </div>
 
@@ -228,8 +361,23 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="stat"><div class="stat-lbl">Por facturar</div><div class="stat-val" id="s-porfacturar">—</div><div class="stat-sub">importe</div></div>
     <div class="stat"><div class="stat-lbl">Este mes</div><div class="stat-val" id="s-alb-mes">—</div><div class="stat-sub">albaranes</div></div>
   </div>
-  <div class="sec-hdr"><span class="sec-title">Albaranes</span></div>
+  <div class="sec-hdr"><span class="sec-title">Albaranes</span><button class="btn-new" onclick="openGenerarFactura()">📄 Factura</button></div>
+  <div class="chips">
+    <button class="chip active" onclick="filterAlbaranes('todos',this)">Todos</button>
+    <button class="chip" onclick="filterAlbaranes('pendiente',this)">Pendientes</button>
+    <button class="chip" onclick="filterAlbaranes('facturado',this)">Facturados</button>
+  </div>
   <div id="alb-list"></div>
+</div>
+
+<!-- SCREEN: PRODUCTOS -->
+<div class="screen" id="scr-productos">
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="text" placeholder="Buscar por nombre o descripción..." oninput="filterProductos(this.value)" id="search-productos"/>
+  </div>
+  <div class="sec-hdr"><span class="sec-title">Catálogo de productos</span><button class="btn-new" onclick="openNuevoProducto()">+ Nuevo</button></div>
+  <div id="productos-list"></div>
 </div>
 
 <!-- SCREEN: TARIFAS -->
@@ -243,12 +391,74 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <div id="tarifa-detail-body"></div>
 </div>
 
+<!-- SCREEN: AJUSTES -->
+<div class="screen" id="scr-ajustes">
+  <div class="detail-section" style="margin-bottom:12px">
+    <h4>Logo de la app</h4>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:14px;line-height:1.6">Sube el logo que aparecerá en la pantalla de acceso y en el encabezado de la app. Se guardará en este dispositivo.</p>
+
+    <!-- Preview actual -->
+    <div id="logo-preview-wrap" style="background:var(--black);border-radius:12px;padding:20px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;min-height:100px;">
+      <img id="logo-preview" src="" alt="" style="display:none;max-width:200px;max-height:70px;object-fit:contain;"/>
+      <span id="logo-preview-empty" style="font-size:13px;color:rgba(255,255,255,.3)">Sin logo cargado — se muestra texto KOBO</span>
+    </div>
+
+    <!-- Upload -->
+    <label style="display:block;width:100%;padding:13px;background:var(--ocre);color:#fff;border-radius:var(--rad-sm);font-size:15px;font-weight:600;text-align:center;cursor:pointer;">
+      📁 Subir logo (PNG o JPG)
+      <input type="file" id="logo-upload-input" accept="image/png,image/jpeg,image/svg+xml,image/webp" style="display:none" onchange="handleLogoUpload(this)"/>
+    </label>
+
+    <button class="btn-secondary" onclick="quitarLogo()" style="margin-top:10px">🗑️ Quitar logo actual</button>
+    <p class="f-note" style="margin-top:8px">Recomendado: PNG con fondo transparente o negro. El logo se mostrará sobre fondo negro en el login y sobre blanco en el header.</p>
+  </div>
+
+  <div class="detail-section" style="margin-bottom:12px">
+    <h4>Previsualización</h4>
+    <p style="font-size:12px;color:var(--text3);margin-bottom:12px">Así quedará el logo en el login y en el header:</p>
+    <div style="background:var(--black);border-radius:10px;padding:18px;display:flex;align-items:center;justify-content:center;margin-bottom:10px;">
+      <img id="logo-prev-login" src="" alt="KOBO" style="display:none;max-width:180px;max-height:64px;object-fit:contain;"/>
+      <span id="logo-prev-login-text" style="font-size:28px;font-weight:800;color:#fff;letter-spacing:3px;">KO<span style="color:var(--ocre)">BO</span></span>
+    </div>
+    <div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:10px;">
+      <img id="logo-prev-hdr" src="" alt="" style="display:none;height:26px;object-fit:contain;"/>
+      <span id="logo-prev-hdr-text" style="font-size:17px;font-weight:800;color:var(--black);letter-spacing:1px;">KO<span style="color:var(--ocre)">BO</span></span>
+      <span style="font-size:12px;color:var(--text3);margin-left:auto">mar 2 abr</span>
+    </div>
+  </div>
+
+  <div class="detail-section">
+    <h4>Acceso y seguridad</h4>
+    <div class="detail-row" style="cursor:pointer" onclick="openLoginSetup()">
+      <span>Cambiar contraseña admin</span>
+      <span style="color:var(--ocre)">→</span>
+    </div>
+    <div class="detail-row" style="cursor:pointer" onclick="setupBiometric()">
+      <span>Configurar Face ID / Huella</span>
+      <span style="color:var(--ocre)">→</span>
+    </div>
+    <div class="detail-row" style="cursor:pointer" onclick="doLogout()">
+      <span style="color:var(--r400)">Cerrar sesión</span>
+      <span style="color:var(--r400)">→</span>
+    </div>
+  </div>
+
+  <div class="detail-section">
+    <h4>Gestión de usuarios</h4>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:14px;line-height:1.6">Crea usuarios para que los profesionales accedan a la app con sus propias credenciales y solo vean las secciones que les asignes.</p>
+    <div id="users-list"></div>
+    <button class="btn-ok" style="margin-top:4px" onclick="openNuevoUsuario()">+ Nuevo usuario</button>
+  </div>
+</div>
+
 <!-- BOTTOM NAV -->
 <nav class="bnav" id="bnav">
   <button class="nb active" onclick="switchTab('pedidos',this)"><span class="nb-icon">📋</span>Pedidos</button>
   <button class="nb" onclick="switchTab('clientes',this)"><span class="nb-icon">🏪</span>Clientes</button>
   <button class="nb" onclick="switchTab('albaranes',this)"><span class="nb-icon">📄</span>Albaranes</button>
+  <button class="nb" onclick="switchTab('productos',this)"><span class="nb-icon">🌾</span>Productos</button>
   <button class="nb" onclick="switchTab('tarifas',this)"><span class="nb-icon">💰</span>Tarifas</button>
+  <button class="nb" onclick="switchTab('ajustes',this)"><span class="nb-icon">⚙️</span>Ajustes</button>
 </nav>
 
 <!-- MODAL -->
@@ -265,11 +475,438 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <script>
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbykvz5mvtq37Z_vFJh1wCh4pkWqwjrzsXWdNWopCaSeLSyxS4kOlbj4LMDtCHLVjQu5/exec';
 const IVA = 0.04;
+const ALL_TABS = ['pedidos','clientes','albaranes','productos','tarifas','ajustes'];
+const LOGO_KEY = 'kobo_logo_v1';
 
 let productos=[], clientes=[], pedidos=[], albaranes=[], tarifas=[];
-let curFilter='todos', curQtys={}, curTipo='particular', curClienteId=null;
+let curFilter='todos', curAlbFilter='todos', curQtys={}, curTipo='particular', curClienteId=null;
 let prevScreen=null, curTarifaId=null, curClienteDetailId=null;
 
+// =====================
+// LOGIN & AUTH
+// =====================
+const AUTH_KEY = 'kobo_auth_v1';    // guarda "username" en sessionStorage
+const USERS_KEY = 'kobo_users_v1';
+
+const ALL_SECTIONS = [
+  {id:'pedidos',   label:'Pedidos',   icon:'📋'},
+  {id:'clientes',  label:'Clientes',  icon:'🏪'},
+  {id:'albaranes', label:'Albaranes', icon:'📄'},
+  {id:'productos', label:'Productos', icon:'🌾'},
+  {id:'tarifas',   label:'Tarifas',   icon:'💰'},
+];
+
+function defaultUsers(){
+  return {
+    admin:{
+      pass:'kobo2024',
+      role:'admin',
+      displayName:'Administrador',
+      // admin siempre ve todo
+      perms:{pedidos:true,clientes:true,albaranes:true,productos:true,tarifas:true}
+    }
+  };
+}
+
+function getUsers(){
+  try{ return JSON.parse(localStorage.getItem(USERS_KEY)) || defaultUsers(); }
+  catch{ return defaultUsers(); }
+}
+function saveUsers(u){ localStorage.setItem(USERS_KEY, JSON.stringify(u)); }
+
+function isLoggedIn(){ return !!sessionStorage.getItem(AUTH_KEY); }
+function setLoggedIn(username){ sessionStorage.setItem(AUTH_KEY, username); }
+function getCurrentUsername(){ return sessionStorage.getItem(AUTH_KEY)||''; }
+function getCurrentUser(){
+  const users = getUsers();
+  return users[getCurrentUsername()] || null;
+}
+function getRole(){
+  const u = getCurrentUser();
+  return u ? u.role : '';
+}
+function canSee(section){
+  const u = getCurrentUser();
+  if(!u) return false;
+  if(u.role === 'admin') return true;
+  return !!(u.perms && u.perms[section]);
+}
+
+// =====================
+// LOGO MANAGEMENT
+// =====================
+function loadLogo(){
+  const src = localStorage.getItem(LOGO_KEY)||'';
+  // Login logo
+  const loginImg = document.getElementById('login-logo-img');
+  const loginTxt = document.getElementById('login-logo-text');
+  if(src){ loginImg.src=src; loginImg.style.display='block'; loginTxt.style.display='none'; }
+  else { loginImg.style.display='none'; loginTxt.style.display='block'; }
+  // Header logo
+  const hdrImg = document.getElementById('hdr-logo-img');
+  const hdrTxt = document.getElementById('hdr-title');
+  if(src){ hdrImg.src=src; hdrImg.style.display='block'; hdrTxt.style.display='none'; }
+  else { hdrImg.style.display='none'; hdrTxt.style.display=''; }
+  // Settings previews
+  applyLogoToSettings(src);
+}
+
+function applyLogoToSettings(src){
+  const prevImg = document.getElementById('logo-preview');
+  const prevEmpty = document.getElementById('logo-preview-empty');
+  const loginImg2 = document.getElementById('logo-prev-login');
+  const loginTxt2 = document.getElementById('logo-prev-login-text');
+  const hdrImg2 = document.getElementById('logo-prev-hdr');
+  const hdrTxt2 = document.getElementById('logo-prev-hdr-text');
+  if(src){
+    if(prevImg){ prevImg.src=src; prevImg.style.display='block'; }
+    if(prevEmpty) prevEmpty.style.display='none';
+    if(loginImg2){ loginImg2.src=src; loginImg2.style.display='block'; }
+    if(loginTxt2) loginTxt2.style.display='none';
+    if(hdrImg2){ hdrImg2.src=src; hdrImg2.style.display='block'; }
+    if(hdrTxt2) hdrTxt2.style.display='none';
+  } else {
+    if(prevImg) prevImg.style.display='none';
+    if(prevEmpty) prevEmpty.style.display='block';
+    if(loginImg2) loginImg2.style.display='none';
+    if(loginTxt2) loginTxt2.style.display='';
+    if(hdrImg2) hdrImg2.style.display='none';
+    if(hdrTxt2) hdrTxt2.style.display='';
+  }
+}
+
+function handleLogoUpload(input){
+  const file = input.files[0];
+  if(!file) return;
+  if(file.size > 2*1024*1024){ showToast('El archivo es demasiado grande (máx 2MB)'); return; }
+  const reader = new FileReader();
+  reader.onload = function(e){
+    const src = e.target.result;
+    localStorage.setItem(LOGO_KEY, src);
+    loadLogo();
+    showToast('✓ Logo guardado correctamente');
+  };
+  reader.readAsDataURL(file);
+}
+
+function quitarLogo(){
+  localStorage.removeItem(LOGO_KEY);
+  const input = document.getElementById('logo-upload-input');
+  if(input) input.value='';
+  loadLogo();
+  showToast('✓ Logo eliminado');
+}
+
+function doLogout(){
+  if(!confirm('¿Cerrar sesión?')) return;
+  sessionStorage.removeItem(AUTH_KEY);
+  location.reload();
+}
+
+// =====================
+// PERMISOS — muestra/oculta tabs según usuario
+// =====================
+function applyPermissions(){
+  const isAdmin = getRole() === 'admin';
+  const navBtns = document.querySelectorAll('.nb');
+  // Los botones de nav corresponden a: pedidos, clientes, albaranes, productos, tarifas, ajustes
+  const tabMap = ['pedidos','clientes','albaranes','productos','tarifas','ajustes'];
+  navBtns.forEach((btn, i) => {
+    const section = tabMap[i];
+    if(section === 'ajustes'){
+      // Ajustes solo para admin
+      btn.style.display = isAdmin ? '' : 'none';
+    } else {
+      btn.style.display = canSee(section) ? '' : 'none';
+    }
+  });
+  // Asegurar que la primera tab visible esté activa
+  const firstVisible = tabMap.find(s => s==='ajustes' ? isAdmin : canSee(s));
+  if(firstVisible){
+    navBtns.forEach(b => b.classList.remove('active'));
+    ALL_TABS.forEach(s => {
+      const el = document.getElementById('scr-'+s);
+      if(el) el.classList.toggle('active', s===firstVisible);
+    });
+    const idx = tabMap.indexOf(firstVisible);
+    if(navBtns[idx]) navBtns[idx].classList.add('active');
+    const labels={pedidos:null,clientes:'Clientes',albaranes:'Albaranes',productos:'Productos',tarifas:'Tarifas',ajustes:'Ajustes'};
+    if(firstVisible==='pedidos') setHdr(null,false,true);
+    else setHdr(labels[firstVisible],false,false);
+  }
+}
+
+// =====================
+// GESTIÓN DE USUARIOS
+// =====================
+function renderUsersList(){
+  const users = getUsers();
+  const list = document.getElementById('users-list');
+  if(!list) return;
+  const entries = Object.entries(users);
+  if(!entries.length){ list.innerHTML='<div class="empty">Sin usuarios</div>'; return; }
+
+  list.innerHTML = entries.map(([username, u]) => {
+    const isAdmin = u.role === 'admin';
+    const initials = (u.displayName||username).slice(0,2).toUpperCase();
+    const permsHtml = isAdmin
+      ? `<div style="font-size:12px;color:var(--ocre-dark);margin-top:6px;padding:8px 10px;background:var(--ocre-tint);border-radius:8px;">👑 Acceso total a todas las secciones</div>`
+      : `<div class="perm-grid">${ALL_SECTIONS.map(s=>{
+          const on = u.perms && u.perms[s.id];
+          return `<div class="perm-item ${on?'on':''}" onclick="togglePerm('${username}','${s.id}',this)">
+            <input type="checkbox" ${on?'checked':''} onclick="event.stopPropagation();togglePerm('${username}','${s.id}',this.closest('.perm-item'))"/>
+            <span class="perm-label">${s.icon} ${s.label}</span>
+          </div>`;
+        }).join('')}</div>`;
+
+    return `<div class="user-card">
+      <div class="user-card-top">
+        <div class="user-avatar">${initials}</div>
+        <div class="user-info">
+          <div class="user-name">${u.displayName||username} <span class="role-badge ${isAdmin?'rb-admin':'rb-user'}">${isAdmin?'Admin':'Usuario'}</span></div>
+          <div class="user-role">@${username}</div>
+        </div>
+        <div class="user-actions">
+          <button class="icon-btn" onclick="openEditarUsuario('${username}')" title="Editar">✏️</button>
+          ${!isAdmin?`<button class="icon-btn" onclick="eliminarUsuario('${username}')" title="Eliminar">🗑️</button>`:''}
+        </div>
+      </div>
+      ${permsHtml}
+    </div>`;
+  }).join('');
+}
+
+function togglePerm(username, section, el){
+  const users = getUsers();
+  const u = users[username];
+  if(!u || u.role==='admin') return;
+  if(!u.perms) u.perms = {};
+  u.perms[section] = !u.perms[section];
+  // actualizar UI del item
+  const chk = el.querySelector('input[type=checkbox]');
+  if(chk) chk.checked = u.perms[section];
+  el.classList.toggle('on', u.perms[section]);
+  saveUsers(users);
+  showToast('✓ Permiso actualizado');
+}
+
+function openNuevoUsuario(){
+  openModal('Nuevo usuario', `
+    <div class="f-row"><label class="f-lbl">Nombre para mostrar</label><input type="text" id="nu-name" placeholder="Ej: Cafetería Sol"/></div>
+    <div class="f-row"><label class="f-lbl">Usuario (sin espacios)</label><input type="text" id="nu-user" placeholder="Ej: cafeteriasol" autocomplete="off"/></div>
+    <div class="f-row"><label class="f-lbl">Contraseña</label><input type="password" id="nu-pass" placeholder="Mínimo 4 caracteres" autocomplete="new-password"/></div>
+    <div class="f-row">
+      <label class="f-lbl">Tipo de usuario</label>
+      <select id="nu-role" onchange="toggleRoleInfo(this.value)">
+        <option value="user">Usuario (acceso limitado)</option>
+        <option value="admin">Administrador (acceso total)</option>
+      </select>
+    </div>
+    <div id="nu-perms-wrap">
+      <label class="f-lbl" style="margin-bottom:8px">Secciones visibles</label>
+      <div class="perm-grid">
+        ${ALL_SECTIONS.map(s=>`
+          <div class="perm-item" id="nuperm-wrap-${s.id}" onclick="toggleNewPerm('${s.id}',this)">
+            <input type="checkbox" id="nuperm-${s.id}" onclick="event.stopPropagation();toggleNewPerm('${s.id}',this.closest('.perm-item'))"/>
+            <span class="perm-label">${s.icon} ${s.label}</span>
+          </div>`).join('')}
+      </div>
+    </div>
+    <button class="btn-ok" onclick="saveNuevoUsuario()" style="margin-top:16px">Crear usuario</button>
+    <button class="btn-secondary" onclick="closeModal()">Cancelar</button>`);
+}
+
+function toggleNewPerm(section, el){
+  const chk = el.querySelector('input[type=checkbox]') || el;
+  if(el.tagName==='INPUT') {
+    el.closest('.perm-item').classList.toggle('on', el.checked);
+    return;
+  }
+  chk.checked = !chk.checked;
+  el.classList.toggle('on', chk.checked);
+}
+
+function toggleRoleInfo(role){
+  const wrap = document.getElementById('nu-perms-wrap');
+  if(wrap) wrap.style.display = role==='admin' ? 'none' : 'block';
+}
+
+function saveNuevoUsuario(){
+  const displayName = document.getElementById('nu-name')?.value.trim();
+  const username = document.getElementById('nu-user')?.value.trim().toLowerCase().replace(/\s+/g,'');
+  const pass = document.getElementById('nu-pass')?.value;
+  const role = document.getElementById('nu-role')?.value || 'user';
+  if(!displayName){ showToast('Introduce un nombre'); return; }
+  if(!username){ showToast('Introduce un nombre de usuario'); return; }
+  if(!pass || pass.length < 4){ showToast('La contraseña debe tener al menos 4 caracteres'); return; }
+  const users = getUsers();
+  if(users[username]){ showToast('Ese nombre de usuario ya existe'); return; }
+  const perms = {};
+  if(role === 'user'){
+    ALL_SECTIONS.forEach(s => {
+      perms[s.id] = !!(document.getElementById('nuperm-'+s.id)?.checked);
+    });
+  }
+  users[username] = { pass, role, displayName, perms };
+  saveUsers(users);
+  closeModal();
+  renderUsersList();
+  showToast(`✓ Usuario "${displayName}" creado`);
+}
+
+function openEditarUsuario(username){
+  const users = getUsers();
+  const u = users[username];
+  if(!u) return;
+  const isAdmin = u.role === 'admin';
+  openModal(`Editar: ${u.displayName||username}`, `
+    <div class="f-row"><label class="f-lbl">Nombre para mostrar</label><input type="text" id="eu-name" value="${u.displayName||username}"/></div>
+    <div class="f-row"><label class="f-lbl">Nueva contraseña <span style="font-weight:400;color:var(--text3)">(dejar vacío para no cambiar)</span></label><input type="password" id="eu-pass" placeholder="••••••" autocomplete="new-password"/></div>
+    ${!isAdmin ? `
+    <label class="f-lbl" style="margin-bottom:8px">Secciones visibles</label>
+    <div class="perm-grid">
+      ${ALL_SECTIONS.map(s=>{
+        const on = u.perms && u.perms[s.id];
+        return `<div class="perm-item ${on?'on':''}" id="euperm-wrap-${s.id}" onclick="toggleEditPerm('${s.id}',this)">
+          <input type="checkbox" id="euperm-${s.id}" ${on?'checked':''} onclick="event.stopPropagation();toggleEditPerm('${s.id}',this.closest('.perm-item'))"/>
+          <span class="perm-label">${s.icon} ${s.label}</span>
+        </div>`;
+      }).join('')}
+    </div>` : `<div style="padding:10px;background:var(--ocre-tint);border-radius:8px;font-size:13px;color:var(--ocre-dark)">👑 Administrador — acceso total</div>`}
+    <button class="btn-ok" onclick="saveEditarUsuario('${username}')" style="margin-top:16px">Guardar cambios</button>
+    <button class="btn-secondary" onclick="closeModal()">Cancelar</button>`);
+}
+
+function toggleEditPerm(section, el){
+  const chk = el.querySelector('input[type=checkbox]') || el;
+  if(el.tagName==='INPUT'){
+    el.closest('.perm-item').classList.toggle('on', el.checked);
+    return;
+  }
+  chk.checked = !chk.checked;
+  el.classList.toggle('on', chk.checked);
+}
+
+function saveEditarUsuario(username){
+  const users = getUsers();
+  const u = users[username];
+  if(!u) return;
+  const newName = document.getElementById('eu-name')?.value.trim();
+  const newPass = document.getElementById('eu-pass')?.value;
+  if(!newName){ showToast('El nombre no puede estar vacío'); return; }
+  u.displayName = newName;
+  if(newPass){
+    if(newPass.length < 4){ showToast('La contraseña debe tener al menos 4 caracteres'); return; }
+    u.pass = newPass;
+  }
+  if(u.role !== 'admin'){
+    if(!u.perms) u.perms = {};
+    ALL_SECTIONS.forEach(s => {
+      u.perms[s.id] = !!(document.getElementById('euperm-'+s.id)?.checked);
+    });
+  }
+  saveUsers(users);
+  closeModal();
+  renderUsersList();
+  showToast(`✓ Usuario "${newName}" actualizado`);
+}
+
+function eliminarUsuario(username){
+  if(!confirm(`¿Eliminar el usuario "${username}"? Esta acción no se puede deshacer.`)) return;
+  const users = getUsers();
+  delete users[username];
+  saveUsers(users);
+  renderUsersList();
+  showToast('✓ Usuario eliminado');
+}
+
+function doLogin(){
+  const user = document.getElementById('login-user')?.value.trim();
+  const pass = document.getElementById('login-pass')?.value;
+  const users = getUsers();
+  if(users[user] && users[user].pass === pass){
+    setLoggedIn(user);
+    document.getElementById('login-error').textContent='';
+    startApp();
+  } else {
+    document.getElementById('login-error').textContent='Usuario o contraseña incorrectos';
+  }
+}
+
+function startApp(){
+  document.getElementById('login-screen').classList.add('hidden');
+  document.getElementById('loading').style.display='flex';
+  applyPermissions();
+  loadAll();
+}
+
+function openLoginSetup(){
+  openModal('Configurar acceso',`
+    <p class="f-note" style="margin-bottom:14px">Aquí puedes cambiar la contraseña del administrador. Los usuarios por defecto son: <b>admin</b>.</p>
+    <div class="f-row"><label class="f-lbl">Contraseña actual</label><input type="password" id="ls-cur" placeholder="••••••"/></div>
+    <div class="f-row"><label class="f-lbl">Nueva contraseña</label><input type="password" id="ls-new" placeholder="••••••"/></div>
+    <div class="f-row"><label class="f-lbl">Repetir nueva contraseña</label><input type="password" id="ls-rep" placeholder="••••••"/></div>
+    <button class="btn-ok" onclick="saveLoginSetup()">Guardar contraseña</button>
+    <button class="btn-secondary" onclick="closeModal()">Cancelar</button>`);
+}
+
+function saveLoginSetup(){
+  const cur=document.getElementById('ls-cur')?.value;
+  const nw=document.getElementById('ls-new')?.value;
+  const rep=document.getElementById('ls-rep')?.value;
+  const users=getUsers();
+  if(users['admin']?.pass!==cur){showToast('Contraseña actual incorrecta');return;}
+  if(!nw||nw.length<4){showToast('La contraseña debe tener al menos 4 caracteres');return;}
+  if(nw!==rep){showToast('Las contraseñas no coinciden');return;}
+  users['admin'].pass=nw;
+  saveUsers(users);
+  closeModal();
+  showToast('✓ Contraseña actualizada');
+}
+
+// --- BIOMETRIC (WebAuthn) ---
+async function setupBiometric(){
+  if(!window.PublicKeyCredential){showToast('Tu dispositivo no soporta biometría');return;}
+  try{
+    const challenge=new Uint8Array(32);crypto.getRandomValues(challenge);
+    const cred=await navigator.credentials.create({publicKey:{
+      challenge,rp:{name:'KOBO Panadería'},
+      user:{id:new TextEncoder().encode('admin'),name:'admin',displayName:'Admin KOBO'},
+      pubKeyCredParams:[{type:'public-key',alg:-7},{type:'public-key',alg:-257}],
+      authenticatorSelection:{userVerification:'required'},timeout:60000
+    }});
+    localStorage.setItem('kobo_cred_id',btoa(String.fromCharCode(...new Uint8Array(cred.rawId))));
+    showToast('✓ Biometría configurada');
+    document.getElementById('btn-biometric').style.display='flex';
+  }catch(e){showToast('No se pudo configurar: '+e.message);}
+}
+
+async function doBiometric(){
+  if(!window.PublicKeyCredential){showToast('Tu dispositivo no soporta biometría');return;}
+  const credId=localStorage.getItem('kobo_cred_id');
+  if(!credId){showToast('Configura primero la biometría en ⚙️');return;}
+  try{
+    const challenge=new Uint8Array(32);crypto.getRandomValues(challenge);
+    const rawId=Uint8Array.from(atob(credId),c=>c.charCodeAt(0));
+    await navigator.credentials.get({publicKey:{
+      challenge,allowCredentials:[{type:'public-key',id:rawId}],
+      userVerification:'required',timeout:60000
+    }});
+    setLoggedIn('admin');
+    startApp();
+  }catch(e){showToast('Verificación fallida');}
+}
+
+function checkBiometricAvailable(){
+  const credId=localStorage.getItem('kobo_cred_id');
+  if(credId&&window.PublicKeyCredential){
+    document.getElementById('btn-biometric').style.display='flex';
+  }
+}
+
+// =====================
+// API
+// =====================
 async function api(params){
   const url=SCRIPT_URL+'?'+new URLSearchParams(params);
   const r=await fetch(url);
@@ -288,6 +925,7 @@ async function loadAll(){
     pedidos=pedidos.map(p=>({...p,Lineas:p.Lineas?tryParse(p.Lineas):[]}));
     albaranes=albaranes.map(a=>({...a,Lineas:a.Lineas?tryParse(a.Lineas):[]}));
     renderAll();
+    renderUsersList();
     document.getElementById('loading').style.display='none';
   }catch(e){
     document.getElementById('loading').innerHTML='<p style="color:red;padding:2rem;text-align:center">Error conectando.<br>Comprueba tu conexión.</p>';
@@ -300,6 +938,7 @@ function renderAll(){
   renderPedidos(curFilter);
   renderClientes('');
   renderAlbaranes();
+  renderProductos('');
   renderTarifas();
   updateStats();
 }
@@ -334,7 +973,9 @@ function updateStats(){
   document.getElementById('s-alb-mes').textContent=albMes;
 }
 
-// --- PEDIDOS ---
+// =====================
+// PEDIDOS
+// =====================
 function renderPedidos(filter){
   const list=document.getElementById('orders-list');
   let data=[...pedidos].reverse();
@@ -362,7 +1003,9 @@ function filterPedidos(f,el){
   renderPedidos(f);
 }
 
-// --- CLIENTES ---
+// =====================
+// CLIENTES
+// =====================
 function renderClientes(q){
   const list=document.getElementById('clients-list');
   let data=clientes;
@@ -397,7 +1040,7 @@ function openClienteDetail(id){
   const c=clientes.find(x=>x.ID===id);
   if(!c)return;
   showScreen('scr-cliente-detail','scr-clientes');
-  setHdr(c.Nombre,true);
+  setHdr(c.Nombre,true,false);
   const pendiente=parseFloat(c.Pendiente)||0;
   const tRows=tarifas.filter(t=>t.TarifaID===c.TarifaID);
   const tarifaNombre=c.TarifaID?getTarifaNombre(c.TarifaID):'Sin tarifa';
@@ -432,25 +1075,269 @@ function openClienteDetail(id){
   `;
 }
 
-// --- ALBARANES ---
+// =====================
+// ALBARANES
+// =====================
 function renderAlbaranes(){
   const list=document.getElementById('alb-list');
-  const data=[...albaranes].reverse();
+  let data=[...albaranes].reverse();
+  if(curAlbFilter==='pendiente') data=data.filter(a=>a.Facturado!=='SI');
+  else if(curAlbFilter==='facturado') data=data.filter(a=>a.Facturado==='SI');
   if(!data.length){list.innerHTML='<div class="empty">Sin albaranes</div>';return;}
   list.innerHTML=data.map(a=>{
     const fact=a.Facturado==='SI';
-    return`<div class="card">
+    return`<div class="card" onclick="openDetalleAlbaran('${a.ID}')">
       <div class="card-top"><div><div class="card-name">${a.ClienteID}</div><div class="card-sub">${a.ID} · ${fmtDate(a.Fecha)}</div></div><div style="text-align:right"><div class="price-lbl">€${(parseFloat(a.Importe)||0).toFixed(2)}</div><span class="badge ${fact?'b-entre':'b-alb'}">${fact?'Facturado':'Pendiente'}</span></div></div>
       <div class="card-body">${resumeLineas(a.Lineas)}</div>
     </div>`;
   }).join('');
 }
 
-// --- TARIFAS ---
+function filterAlbaranes(f,el){
+  curAlbFilter=f;
+  document.querySelectorAll('#scr-albaranes .chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  renderAlbaranes();
+}
+
+function openDetalleAlbaran(id){
+  const a=albaranes.find(x=>x.ID===id);
+  if(!a)return;
+  const fact=a.Facturado==='SI';
+  openModal(`Albarán ${a.ID}`,`
+    <div style="margin-bottom:12px">
+      <div style="font-size:16px;font-weight:700">${a.ClienteID}</div>
+      <div style="font-size:13px;color:var(--text2)">${fmtDate(a.Fecha)}</div>
+    </div>
+    <div class="detail-section" style="margin-bottom:12px">
+      <h4>Líneas del albarán</h4>
+      ${(a.Lineas||[]).map(l=>`<div class="detail-row"><span>${l.nombre}</span><span>${l.qty} ${l.unidad||'ud'}</span></div>`).join('')}
+    </div>
+    <div class="total-box">
+      <span class="total-lbl">Importe</span>
+      <div style="text-align:right">
+        <div class="total-val">€${(parseFloat(a.Importe)||0).toFixed(2)}</div>
+        <div class="total-iva">Con IVA (4%): €${((parseFloat(a.Importe)||0)*1.04).toFixed(2)}</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+      <span class="badge ${fact?'b-entre':'b-alb'}" style="font-size:13px;padding:5px 14px">${fact?'✓ Facturado':'Pendiente de factura'}</span>
+      ${!fact?`<button class="btn-new" onclick="marcarAlbaranFacturado('${id}')">Marcar facturado</button>`:''}
+    </div>
+    <button class="btn-secondary" onclick="closeModal()">Cerrar</button>`);
+}
+
+async function marcarAlbaranFacturado(id){
+  await api({action:'updateAlbaran',data:JSON.stringify({ID:id,Facturado:'SI'})});
+  const a=albaranes.find(x=>x.ID===id);
+  if(a)a.Facturado='SI';
+  closeModal();renderAlbaranes();updateStats();showToast('✓ Albarán marcado como facturado');
+}
+
+function openGenerarFactura(){
+  // Agrupamos albaranes pendientes por cliente
+  const pendientes=albaranes.filter(a=>a.Facturado!=='SI');
+  if(!pendientes.length){showToast('No hay albaranes pendientes de facturar');return;}
+  // Extraer clientes únicos con albaranes pendientes
+  const clientesConPend=[...new Set(pendientes.map(a=>a.ClienteID))];
+  openModal('Generar factura',`
+    <p class="f-note" style="margin-bottom:14px">Selecciona un cliente y elige qué albaranes incluir en la factura.</p>
+    <div class="f-row">
+      <label class="f-lbl">Cliente</label>
+      <select id="f-fact-cli" onchange="onFactClienteChange(this.value)">
+        <option value="">Seleccionar cliente...</option>
+        ${clientesConPend.map(c=>`<option value="${c}">${c}</option>`).join('')}
+      </select>
+    </div>
+    <div id="fact-alb-list" style="margin-bottom:12px"></div>
+    <div class="factura-total-box">
+      <span class="factura-total-lbl">Total factura</span>
+      <span class="factura-total-val" id="fact-total">€0.00</span>
+    </div>
+    <div class="f-row"><label class="f-lbl">Número de factura</label><input type="text" id="f-fact-num" placeholder="FAC-001"/></div>
+    <button class="btn-ok" onclick="generarFactura()">Generar factura</button>
+    <button class="btn-secondary" onclick="closeModal()">Cancelar</button>`);
+}
+
+function onFactClienteChange(clienteId){
+  const pendientes=albaranes.filter(a=>a.Facturado!=='SI'&&a.ClienteID===clienteId);
+  const container=document.getElementById('fact-alb-list');
+  if(!pendientes.length){container.innerHTML='<p class="f-note">Sin albaranes pendientes para este cliente.</p>';return;}
+  container.innerHTML=`
+    <div style="border:1px solid var(--border2);border-radius:var(--rad-sm);padding:12px 14px;margin-bottom:4px">
+      ${pendientes.map(a=>`
+        <div class="alb-select-item">
+          <input type="checkbox" id="chk-${a.ID}" value="${a.ID}" data-importe="${a.Importe}" onchange="updateFactTotal()"/>
+          <div class="alb-select-info">
+            <div class="alb-select-id">${a.ID} — ${fmtDate(a.Fecha)}</div>
+            <div class="alb-select-detail">${resumeLineas(a.Lineas)}</div>
+          </div>
+          <div class="alb-select-importe">€${(parseFloat(a.Importe)||0).toFixed(2)}</div>
+        </div>`).join('')}
+    </div>`;
+  updateFactTotal();
+}
+
+function updateFactTotal(){
+  const checks=document.querySelectorAll('#fact-alb-list input[type=checkbox]:checked');
+  let total=0;
+  checks.forEach(c=>total+=parseFloat(c.dataset.importe)||0);
+  const el=document.getElementById('fact-total');
+  if(el)el.textContent='€'+(total*1.04).toFixed(2);
+}
+
+async function generarFactura(){
+  const clienteId=document.getElementById('f-fact-cli')?.value;
+  const factNum=document.getElementById('f-fact-num')?.value.trim();
+  if(!clienteId){showToast('Selecciona un cliente');return;}
+  if(!factNum){showToast('Introduce un número de factura');return;}
+  const checks=[...document.querySelectorAll('#fact-alb-list input[type=checkbox]:checked')];
+  if(!checks.length){showToast('Selecciona al menos un albarán');return;}
+  const ids=checks.map(c=>c.value);
+  let total=0;
+  checks.forEach(c=>total+=parseFloat(c.dataset.importe)||0);
+  showToast('Generando factura...');
+  for(const id of ids){
+    await api({action:'updateAlbaran',data:JSON.stringify({ID:id,Facturado:'SI',FacturaID:factNum})});
+    const a=albaranes.find(x=>x.ID===id);
+    if(a){a.Facturado='SI';a.FacturaID=factNum;}
+  }
+  // Actualizar pendiente del cliente
+  const c=clientes.find(x=>x.Nombre===clienteId||x.ID===clienteId);
+  if(c){
+    const np=Math.max(0,(parseFloat(c.Pendiente)||0)-total);
+    await api({action:'updateCliente',data:JSON.stringify({ID:c.ID,Pendiente:np.toFixed(2)})});
+    c.Pendiente=np.toFixed(2);
+  }
+  closeModal();renderAlbaranes();updateStats();
+  showToast(`✓ Factura ${factNum} generada (${ids.length} albaranes · €${(total*1.04).toFixed(2)} con IVA)`);
+}
+
+// =====================
+// PRODUCTOS (catálogo)
+// =====================
+function renderProductos(q){
+  const list=document.getElementById('productos-list');
+  let data=productos;
+  if(q){
+    const ql=q.toLowerCase();
+    data=data.filter(p=>
+      p.Nombre.toLowerCase().includes(ql)||
+      (p.Descripcion||'').toLowerCase().includes(ql)||
+      (p.Formato||'').toLowerCase().includes(ql)
+    );
+  }
+  if(!data.length){list.innerHTML='<div class="empty">Sin productos</div>';return;}
+  list.innerHTML=data.map(p=>{
+    const pvp=p.PVP?`€${(parseFloat(p.PVP)*1.04).toFixed(2)}`:'';
+    const soloProf=p.Solo_Prof==='SI';
+    return`<div class="prod-catalog-item">
+      <div class="prod-catalog-top">
+        <div>
+          <div class="prod-catalog-name">${p.Nombre}</div>
+          <div class="prod-catalog-formato">${p.Formato||''} ${p.Unidad?'· '+p.Unidad:''}</div>
+          ${p.Descripcion?`<div style="font-size:12px;color:var(--text3);margin-top:3px">${p.Descripcion}</div>`:''}
+        </div>
+        <div class="prod-catalog-actions">
+          <button class="icon-btn" onclick="openEditarProducto('${p.ID}')">✏️</button>
+          <button class="icon-btn" onclick="confirmarEliminarProducto('${p.ID}')">🗑️</button>
+        </div>
+      </div>
+      <div class="prod-catalog-prices">
+        ${pvp?`<span class="prod-catalog-price-tag pct-pvp">PVP ${pvp}</span>`:''}
+        ${soloProf?`<span class="prod-catalog-price-tag pct-solo">Solo profesionales</span>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filterProductos(q){renderProductos(q);}
+
+function openNuevoProducto(){
+  openModal('Nuevo producto',`
+    <div class="f-row"><label class="f-lbl">Nombre</label><input type="text" id="fp-nom" placeholder="Ej: Pan de masa madre"/></div>
+    <div class="f-grid">
+      <div class="f-row"><label class="f-lbl">Formato</label><input type="text" id="fp-fmt" placeholder="500g, 1kg..."/></div>
+      <div class="f-row"><label class="f-lbl">Unidad</label><input type="text" id="fp-uni" placeholder="ud, kg..."/></div>
+    </div>
+    <div class="f-row"><label class="f-lbl">Descripción (opcional)</label><textarea id="fp-desc" placeholder="Descripción breve del producto..."></textarea></div>
+    <div class="f-row"><label class="f-lbl">PVP sin IVA (€)</label><input type="number" id="fp-pvp" placeholder="0.00" step="0.01"/></div>
+    <div class="f-row">
+      <label class="f-lbl">¿Solo profesionales?</label>
+      <select id="fp-prof"><option value="NO">No (disponible para todos)</option><option value="SI">Sí (solo profesionales)</option></select>
+    </div>
+    <button class="btn-ok" onclick="saveNuevoProducto()">Guardar producto</button>
+    <button class="btn-secondary" onclick="closeModal()">Cancelar</button>`);
+}
+
+async function saveNuevoProducto(){
+  const nom=document.getElementById('fp-nom')?.value.trim();
+  if(!nom){showToast('El nombre es obligatorio');return;}
+  const pvp=document.getElementById('fp-pvp')?.value;
+  const newId='PROD-'+String(Date.now()).slice(-6);
+  const prod={
+    ID:newId,
+    Nombre:nom,
+    Formato:document.getElementById('fp-fmt')?.value.trim()||'',
+    Unidad:document.getElementById('fp-uni')?.value.trim()||'ud',
+    Descripcion:document.getElementById('fp-desc')?.value.trim()||'',
+    PVP:pvp?parseFloat(pvp).toFixed(2):'',
+    Solo_Prof:document.getElementById('fp-prof')?.value||'NO'
+  };
+  showToast('Guardando...');
+  await api({action:'saveProducto',data:JSON.stringify(prod)});
+  productos.push(prod);
+  closeModal();renderProductos('');
+  document.getElementById('search-productos').value='';
+  showToast('✓ Producto guardado');
+}
+
+function openEditarProducto(id){
+  const p=productos.find(x=>x.ID===id);
+  if(!p)return;
+  openModal('Editar producto',`
+    <div class="f-row"><label class="f-lbl">Nombre</label><input type="text" id="fp-nom" value="${p.Nombre}"/></div>
+    <div class="f-grid">
+      <div class="f-row"><label class="f-lbl">Formato</label><input type="text" id="fp-fmt" value="${p.Formato||''}"/></div>
+      <div class="f-row"><label class="f-lbl">Unidad</label><input type="text" id="fp-uni" value="${p.Unidad||'ud'}"/></div>
+    </div>
+    <div class="f-row"><label class="f-lbl">Descripción</label><textarea id="fp-desc">${p.Descripcion||''}</textarea></div>
+    <div class="f-row"><label class="f-lbl">PVP sin IVA (€)</label><input type="number" id="fp-pvp" value="${p.PVP||''}" step="0.01"/></div>
+    <div class="f-row">
+      <label class="f-lbl">¿Solo profesionales?</label>
+      <select id="fp-prof"><option value="NO" ${p.Solo_Prof!=='SI'?'selected':''}>No (disponible para todos)</option><option value="SI" ${p.Solo_Prof==='SI'?'selected':''}>Sí (solo profesionales)</option></select>
+    </div>
+    <button class="btn-ok" onclick="saveEditarProducto('${id}')">Guardar cambios</button>
+    <button class="btn-secondary" onclick="closeModal()">Cancelar</button>`);
+}
+
+async function saveEditarProducto(id){
+  const p=productos.find(x=>x.ID===id);
+  if(!p)return;
+  p.Nombre=document.getElementById('fp-nom')?.value.trim()||p.Nombre;
+  p.Formato=document.getElementById('fp-fmt')?.value.trim()||'';
+  p.Unidad=document.getElementById('fp-uni')?.value.trim()||'ud';
+  p.Descripcion=document.getElementById('fp-desc')?.value.trim()||'';
+  const pvp=document.getElementById('fp-pvp')?.value;
+  p.PVP=pvp?parseFloat(pvp).toFixed(2):'';
+  p.Solo_Prof=document.getElementById('fp-prof')?.value||'NO';
+  await api({action:'updateProducto',data:JSON.stringify(p)});
+  closeModal();renderProductos('');showToast('✓ Producto actualizado');
+}
+
+async function confirmarEliminarProducto(id){
+  if(!confirm('¿Eliminar este producto del catálogo?'))return;
+  await api({action:'deleteProducto',data:JSON.stringify({ID:id})});
+  productos=productos.filter(p=>p.ID!==id);
+  renderProductos('');showToast('✓ Producto eliminado');
+}
+
+// =====================
+// TARIFAS
+// =====================
 function renderTarifas(){
   const list=document.getElementById('tarifas-list');
   const ids=[...new Set(tarifas.map(t=>t.TarifaID))];
-  // Añadir tarifa de particulares (del catálogo)
   const html=`
     <div class="tarifa-card" onclick="openTarifaDetail('__particulares__')">
       <div class="tarifa-card-top"><span class="tarifa-card-name">Particulares</span><span class="tarifa-card-count">${productos.filter(p=>p.Solo_Prof!=='SI'&&p.PVP&&p.PVP!=='').length} productos</span></div>
@@ -477,7 +1364,7 @@ function openTarifaDetail(tid){
 
 function renderTarifaDetail(tid){
   if(tid==='__particulares__'){
-    setHdr('Tarifa Particulares',true);
+    setHdr('Tarifa Particulares',true,false);
     const rows=productos.filter(p=>p.Solo_Prof!=='SI'&&p.PVP&&p.PVP!=='');
     document.getElementById('tarifa-detail-body').innerHTML=`
       <div class="detail-section">
@@ -489,7 +1376,7 @@ function renderTarifaDetail(tid){
   }
   const rows=tarifas.filter(t=>t.TarifaID===tid);
   const nombre=rows[0]?.Nombre||tid;
-  setHdr(nombre,true);
+  setHdr(nombre,true,false);
   const usadaPor=clientes.filter(c=>c.TarifaID===tid).map(c=>c.Nombre).join(', ')||'Ningún cliente';
   document.getElementById('tarifa-detail-body').innerHTML=`
     <div class="detail-section">
@@ -596,7 +1483,6 @@ async function saveNuevaTarifa(){
   const nombre=document.getElementById('f-tnombre')?.value.trim();
   if(!nombre){showToast('Introduce un nombre');return;}
   const tid='T-'+String(Date.now()).slice(-6);
-  // Guardar una fila placeholder para que la tarifa exista
   await api({action:'saveTarifaRow',data:JSON.stringify({TarifaID:tid,Nombre:nombre,ProductoID:'',Precio:''})});
   tarifas.push({TarifaID:tid,Nombre:nombre,ProductoID:'',Precio:''});
   closeModal();
@@ -605,7 +1491,9 @@ async function saveNuevaTarifa(){
   showToast('✓ Tarifa creada');
 }
 
-// --- NUEVO PEDIDO ---
+// =====================
+// NUEVO PEDIDO
+// =====================
 function openNuevoPedido(){
   curQtys={};curTipo='particular';curClienteId=null;
   openModal('Nuevo pedido',buildPedidoForm());
@@ -730,7 +1618,9 @@ async function savePedido(){
   closeModal();renderAll();showToast('✓ Pedido guardado');
 }
 
-// --- DETALLE PEDIDO ---
+// =====================
+// DETALLE PEDIDO
+// =====================
 function openDetallePedido(id){
   const p=pedidos.find(x=>x.ID===id);
   if(!p)return;
@@ -758,7 +1648,9 @@ async function cambiarEstado(id,estado){
   closeModal();renderAll();showToast('✓ Estado actualizado');
 }
 
-// --- NUEVO/EDITAR CLIENTE ---
+// =====================
+// NUEVO/EDITAR CLIENTE
+// =====================
 function openNuevoCliente(){
   const tarifaOpts=getTarifasOpts();
   openModal('Nuevo cliente profesional',`
@@ -821,21 +1713,27 @@ async function saveEditarCliente(id){
   showToast('✓ Cliente actualizado');
 }
 
-// --- NAV / SCREEN ---
+// =====================
+// NAV / SCREEN
+// =====================
 function switchTab(tab,el){
   document.querySelectorAll('.nb').forEach(b=>b.classList.remove('active'));
   el.classList.add('active');
-  ['pedidos','clientes','albaranes','tarifas'].forEach(s=>{
+  ALL_TABS.forEach(s=>{
     document.getElementById('scr-'+s).classList.toggle('active',s===tab);
   });
   document.getElementById('scr-cliente-detail').classList.remove('active');
   document.getElementById('scr-tarifa-detail').classList.remove('active');
-  setHdr(tab==='pedidos'?'KO<span style="color:var(--a400)">BO</span>':tab.charAt(0).toUpperCase()+tab.slice(1),false);
+  const labels={pedidos:null,clientes:'Clientes',albaranes:'Albaranes',productos:'Productos',tarifas:'Tarifas',ajustes:'Ajustes'};
+  if(tab==='pedidos'){setHdr(null,false,true);}
+  else{setHdr(labels[tab]||tab,false,false);}
+  if(tab==='ajustes') renderUsersList();
   prevScreen=null;
 }
 
 function showScreen(scr,prev){
-  ['scr-pedidos','scr-clientes','scr-albaranes','scr-tarifas','scr-cliente-detail','scr-tarifa-detail'].forEach(s=>{
+  const all=['scr-pedidos','scr-clientes','scr-albaranes','scr-productos','scr-tarifas','scr-ajustes','scr-cliente-detail','scr-tarifa-detail'];
+  all.forEach(s=>{
     document.getElementById(s).classList.toggle('active',s===scr);
   });
   prevScreen=prev;
@@ -845,21 +1743,35 @@ function goBack(){
   if(!prevScreen)return;
   showScreen(prevScreen,null);
   const tab=prevScreen.replace('scr-','');
-  setHdr(tab.charAt(0).toUpperCase()+tab.slice(1),false);
+  const labels={pedidos:null,clientes:'Clientes',albaranes:'Albaranes',productos:'Productos',tarifas:'Tarifas'};
+  if(tab==='pedidos'){setHdr(null,false,true);}
+  else{setHdr(labels[tab]||tab,false,false);}
   document.querySelectorAll('.nb').forEach((b,i)=>{
-    b.classList.toggle('active',['pedidos','clientes','albaranes','tarifas'][i]===tab);
+    b.classList.toggle('active',ALL_TABS[i]===tab);
   });
   if(tab==='clientes')renderClientes('');
   if(tab==='tarifas')renderTarifas();
 }
 
-function setHdr(title,showBack){
-  document.getElementById('hdr-title').innerHTML=title;
-  document.getElementById('hdr-back').style.display=showBack?'block':'none';
-  document.getElementById('hdr-date').style.display=showBack?'none':'block';
+function setHdr(title,showBack,showLogo){
+  const logoEl=document.getElementById('hdr-logo');
+  const titleEl=document.getElementById('hdr-title');
+  const backEl=document.getElementById('hdr-back');
+  const dateEl=document.getElementById('hdr-date');
+  backEl.style.display=showBack?'block':'none';
+  dateEl.style.display=showBack?'none':'block';
+  if(showLogo){
+    logoEl.style.display='flex';
+    titleEl.innerHTML='KO<span>BO</span>';
+  } else {
+    logoEl.style.display='flex';
+    titleEl.innerHTML=title||'KO<span>BO</span>';
+  }
 }
 
-// --- MODAL ---
+// =====================
+// MODAL
+// =====================
 function openModal(title,body){
   document.getElementById('modal-title').textContent=title;
   document.getElementById('modal-body').innerHTML=body;
@@ -868,17 +1780,33 @@ function openModal(title,body){
 function closeModal(){document.getElementById('modal').classList.remove('open');}
 function closeMOut(e){if(e.target===document.getElementById('modal'))closeModal();}
 
-// --- TOAST ---
+// =====================
+// TOAST
+// =====================
 function showToast(msg){
   const t=document.getElementById('toast');
   t.textContent=msg;t.classList.add('show');
   setTimeout(()=>t.classList.remove('show'),2500);
 }
 
-// --- INIT ---
+// =====================
+// INIT
+// =====================
 const d=new Date();
 document.getElementById('hdr-date').textContent=d.toLocaleDateString('es-ES',{weekday:'short',day:'numeric',month:'short'});
-loadAll();
+
+// Cargar logo guardado siempre al inicio
+loadLogo();
+
+// Check login
+if(isLoggedIn()){
+  document.getElementById('login-screen').classList.add('hidden');
+  document.getElementById('loading').style.display='flex';
+  applyPermissions();
+  loadAll();
+} else {
+  checkBiometricAvailable();
+}
 </script>
 </body>
 </html>
