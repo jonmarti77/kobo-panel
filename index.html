@@ -368,6 +368,21 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <div id="alb-list"></div>
 </div>
 
+<!-- SCREEN: FACTURAS -->
+<div class="screen" id="scr-facturas">
+  <div class="stats">
+    <div class="stat"><div class="stat-lbl">Este mes</div><div class="stat-val" id="s-fact-mes">—</div><div class="stat-sub">facturas</div></div>
+    <div class="stat"><div class="stat-lbl">Total mes</div><div class="stat-val" id="s-fact-total">—</div><div class="stat-sub">facturado</div></div>
+  </div>
+  <div class="sec-hdr"><span class="sec-title">Facturas</span></div>
+  <div class="chips">
+    <button class="chip active" onclick="filterFacturas('todos',this)">Todos</button>
+    <button class="chip" onclick="filterFacturas('particular',this)">Particulares</button>
+    <button class="chip" onclick="filterFacturas('profesional',this)">Profesionales</button>
+  </div>
+  <div id="facturas-list"></div>
+</div>
+
 <!-- SCREEN: PRODUCTOS -->
 <div class="screen" id="scr-productos">
   <div class="search-wrap">
@@ -454,6 +469,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <button class="nb active" onclick="switchTab('pedidos',this)"><span class="nb-icon">📋</span>Pedidos</button>
   <button class="nb" onclick="switchTab('clientes',this)"><span class="nb-icon">🏪</span>Clientes</button>
   <button class="nb" onclick="switchTab('albaranes',this)"><span class="nb-icon">📄</span>Albaranes</button>
+  <button class="nb" onclick="switchTab('facturas',this)"><span class="nb-icon">🧾</span>Facturas</button>
   <button class="nb" onclick="switchTab('productos',this)"><span class="nb-icon">🌾</span>Productos</button>
   <button class="nb" onclick="switchTab('tarifas',this)"><span class="nb-icon">💰</span>Tarifas</button>
   <button class="nb" onclick="switchTab('ajustes',this)"><span class="nb-icon">⚙️</span>Ajustes</button>
@@ -473,11 +489,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <script>
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbykvz5mvtq37Z_vFJh1wCh4pkWqwjrzsXWdNWopCaSeLSyxS4kOlbj4LMDtCHLVjQu5/exec';
 const IVA = 0.04;
-const ALL_TABS = ['pedidos','clientes','albaranes','productos','tarifas','ajustes'];
+const ALL_TABS = ['pedidos','clientes','albaranes','facturas','productos','tarifas','ajustes'];
 const LOGO_KEY = 'kobo_logo_v1';
 
-let productos=[], clientes=[], pedidos=[], albaranes=[], tarifas=[];
-let curFilter='todos', curAlbFilter='todos', curQtys={}, curTipo='particular', curClienteId=null;
+let productos=[], clientes=[], pedidos=[], albaranes=[], tarifas=[], facturas=[];
+let curFilter='todos', curAlbFilter='todos', curFactFilter='todos', curQtys={}, curTipo='particular', curClienteId=null;
 let prevScreen=null, curTarifaId=null, curClienteDetailId=null;
 
 // =====================
@@ -490,6 +506,7 @@ const ALL_SECTIONS = [
   {id:'pedidos',   label:'Pedidos',   icon:'📋'},
   {id:'clientes',  label:'Clientes',  icon:'🏪'},
   {id:'albaranes', label:'Albaranes', icon:'📄'},
+  {id:'facturas',  label:'Facturas',  icon:'🧾'},
   {id:'productos', label:'Productos', icon:'🌾'},
   {id:'tarifas',   label:'Tarifas',   icon:'💰'},
 ];
@@ -913,15 +930,17 @@ async function api(params){
 
 async function loadAll(){
   try{
-    [productos,clientes,pedidos,albaranes,tarifas]=await Promise.all([
+    [productos,clientes,pedidos,albaranes,tarifas,facturas]=await Promise.all([
       api({action:'getProductos'}),
       api({action:'getClientes'}),
       api({action:'getPedidos'}),
       api({action:'getAlbaranes'}),
       api({action:'getTarifas'}),
+      api({action:'getFacturas'}),
     ]);
     pedidos=pedidos.map(p=>({...p,Lineas:p.Lineas?tryParse(p.Lineas):[]}));
     albaranes=albaranes.map(a=>({...a,Lineas:a.Lineas?tryParse(a.Lineas):[]}));
+    facturas=facturas.map(f=>({...f,Lineas:f.Lineas?tryParse(f.Lineas):[]}));
     renderAll();
     renderUsersList();
     document.getElementById('loading').style.display='none';
@@ -936,6 +955,7 @@ function renderAll(){
   renderPedidos(curFilter);
   renderClientes('');
   renderAlbaranes();
+  renderFacturas();
   renderProductos('');
   renderTarifas();
   updateStats();
@@ -1221,12 +1241,29 @@ async function generarFactura(){
   const ids=checks.map(c=>c.value);
   let total=0;
   checks.forEach(c=>total+=parseFloat(c.dataset.importe)||0);
+  const totalConIva=total*1.04;
   showToast('Generando factura...');
+
+  // Marcar albaranes como facturados
   for(const id of ids){
     await api({action:'updateAlbaran',data:JSON.stringify({ID:id,Facturado:'SI',FacturaID:factNum})});
     const a=albaranes.find(x=>x.ID===id);
     if(a){a.Facturado='SI';a.FacturaID=factNum;}
   }
+
+  // Recopilar líneas de todos los albaranes seleccionados
+  const todasLineas=ids.flatMap(id=>{
+    const a=albaranes.find(x=>x.ID===id);
+    return a?a.Lineas:[];
+  });
+
+  // Guardar en hoja Facturas
+  const fecha=new Date().toISOString().slice(0,10);
+  const factId=factNum;
+  const fact={ID:factId,Numero:factNum,Cliente:clienteId,Tipo:'profesional',Fecha:fecha,Lineas:JSON.stringify(todasLineas),BaseImponible:total.toFixed(2),IVA:(total*IVA).toFixed(2),Total:totalConIva.toFixed(2),AlbaranesIDs:ids.join(','),Estado:'emitida'};
+  await api({action:'saveFactura',data:JSON.stringify(fact)});
+  facturas.push({...fact,Lineas:todasLineas});
+
   // Actualizar pendiente del cliente
   const c=clientes.find(x=>x.Nombre===clienteId||x.ID===clienteId);
   if(c){
@@ -1234,13 +1271,91 @@ async function generarFactura(){
     await api({action:'updateCliente',data:JSON.stringify({ID:c.ID,Pendiente:np.toFixed(2)})});
     c.Pendiente=np.toFixed(2);
   }
-  closeModal();renderAlbaranes();updateStats();
-  showToast(`✓ Factura ${factNum} generada (${ids.length} albaranes · €${(total*1.04).toFixed(2)} con IVA)`);
+  closeModal();renderAll();
+  showToast(`✓ Factura ${factNum} · €${totalConIva.toFixed(2)} con IVA`);
 }
 
 // =====================
-// PRODUCTOS (catálogo)
+// FACTURAS
 // =====================
+function renderFacturas(){
+  const list=document.getElementById('facturas-list');
+  if(!list)return;
+  let data=[...facturas].reverse();
+  if(curFactFilter==='particular') data=data.filter(f=>f.Tipo==='particular');
+  else if(curFactFilter==='profesional') data=data.filter(f=>f.Tipo==='profesional');
+  // Stats
+  const now=new Date();
+  const mesStr=String(now.getMonth()+1).padStart(2,'0');
+  const anyoStr=String(now.getFullYear());
+  const factMes=facturas.filter(f=>(f.Fecha||'').toString().startsWith(anyoStr+'-'+mesStr));
+  const totalMes=factMes.reduce((s,f)=>s+(parseFloat(f.Total)||0),0);
+  const elMes=document.getElementById('s-fact-mes');
+  const elTotal=document.getElementById('s-fact-total');
+  if(elMes)elMes.textContent=factMes.length;
+  if(elTotal)elTotal.textContent='€'+totalMes.toFixed(0);
+  if(!data.length){list.innerHTML='<div class="empty">Sin facturas todavía</div>';return;}
+  list.innerHTML=data.map(f=>{
+    const esProf=f.Tipo==='profesional';
+    const tipoBadge=esProf
+      ?'<span class="badge b-prof" style="margin-right:4px">Profesional</span>'
+      :'<span class="badge b-part" style="margin-right:4px">Particular</span>';
+    return`<div class="card" onclick="openDetalleFactura('${f.ID}')">
+      <div class="card-top">
+        <div>
+          <div class="card-name">${f.Cliente}</div>
+          <div class="card-sub">${f.Numero} · ${fmtDate(f.Fecha)}</div>
+        </div>
+        <div style="text-align:right">
+          <div class="price-lbl">€${parseFloat(f.Total||0).toFixed(2)}</div>
+          <span class="badge b-listo" style="margin-top:4px;display:inline-block">Emitida</span>
+        </div>
+      </div>
+      <div class="card-body">${resumeLineas(f.Lineas)}</div>
+      <div class="card-foot">
+        <div>${tipoBadge}</div>
+        <div style="font-size:12px;color:var(--text3)">Base: €${parseFloat(f.BaseImponible||0).toFixed(2)} + IVA 4%</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filterFacturas(f,el){
+  curFactFilter=f;
+  document.querySelectorAll('#scr-facturas .chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  renderFacturas();
+}
+
+function openDetalleFactura(id){
+  const f=facturas.find(x=>x.ID===id);
+  if(!f)return;
+  const esProf=f.Tipo==='profesional';
+  const base=parseFloat(f.BaseImponible||0);
+  const iva=parseFloat(f.IVA||0);
+  const total=parseFloat(f.Total||0);
+  openModal(`Factura ${f.Numero}`,`
+    <div style="margin-bottom:14px">
+      <div style="font-size:16px;font-weight:700">${f.Cliente}</div>
+      <div style="font-size:13px;color:var(--text2)">${fmtDate(f.Fecha)} · <span class="badge ${esProf?'b-prof':'b-part'}">${esProf?'Profesional':'Particular'}</span></div>
+    </div>
+    <div class="detail-section" style="margin-bottom:12px">
+      <h4>Líneas</h4>
+      ${(f.Lineas||[]).map(l=>`
+        <div class="detail-row">
+          <span>${l.nombre}</span>
+          <span>${l.qty} ${l.unidad||'ud'}</span>
+        </div>`).join('')}
+    </div>
+    <div class="detail-section" style="margin-bottom:14px">
+      <h4>Importes</h4>
+      <div class="detail-row"><span>Base imponible</span><span>€${base.toFixed(2)}</span></div>
+      <div class="detail-row"><span>IVA (4%)</span><span>€${iva.toFixed(2)}</span></div>
+      <div class="detail-row"><span style="font-weight:700;color:var(--black)">Total</span><span style="font-weight:700;font-size:16px;color:var(--ocre-dark)">€${total.toFixed(2)}</span></div>
+    </div>
+    ${esProf&&f.AlbaranesIDs?`<div style="font-size:12px;color:var(--text3);margin-bottom:14px">Albaranes incluidos: ${f.AlbaranesIDs}</div>`:''}
+    <button class="btn-secondary" onclick="closeModal()">Cerrar</button>`);
+}
 function renderProductos(q){
   const list=document.getElementById('productos-list');
   let data=productos;
@@ -1268,10 +1383,7 @@ function renderProductos(q){
           <button class="icon-btn" onclick="confirmarEliminarProducto('${p.ID}')">🗑️</button>
         </div>
       </div>
-      <div class="prod-catalog-prices">
-        ${pvp?`<span class="prod-catalog-price-tag pct-pvp">PVP ${pvp}</span>`:''}
-        ${soloProf?`<span class="prod-catalog-price-tag pct-solo">Solo profesionales</span>`:''}
-      </div>
+      ${soloProf?`<div class="prod-catalog-prices"><span class="prod-catalog-price-tag pct-prof">Solo profesionales</span></div>`:''}
     </div>`;
   }).join('');
 }
@@ -1633,11 +1745,22 @@ async function savePedido(){
   const fecha=document.getElementById('f-fecha')?.value||new Date().toISOString().slice(0,10);
   const hora=document.getElementById('f-hora')?.value||'';
   const total=calcTotal();
+  const totalConIva=(total*1.04);
   const newId='P-'+String(pedidos.length+1).padStart(3,'0');
   const albId=curTipo==='profesional'?'ALB-'+String(albaranes.length+1).padStart(3,'0'):'';
   const pedido={ID:newId,Cliente:clienteNombre,Tipo:curTipo,Fecha:fecha,Hora:hora,Estado:'pendiente',Total:total.toFixed(2),Albaran:albId,Lineas:JSON.stringify(lineas)};
   showToast('Guardando...');
   await api({action:'savePedido',data:JSON.stringify(pedido)});
+
+  // Factura simplificada para particulares
+  if(curTipo==='particular'){
+    const factId='FSIM-'+String(facturas.length+1).padStart(3,'0');
+    const fact={ID:factId,Numero:factId,Cliente:clienteNombre,Tipo:'particular',Fecha:fecha,Lineas:JSON.stringify(lineas),BaseImponible:total.toFixed(2),IVA:(total*IVA).toFixed(2),Total:totalConIva.toFixed(2),PedidoID:newId,Estado:'emitida'};
+    await api({action:'saveFactura',data:JSON.stringify(fact)});
+    facturas.push({...fact,Lineas:lineas});
+  }
+
+  // Albarán para profesionales
   if(albId){
     const alb={ID:albId,ClienteID:clienteNombre,Fecha:fecha,Lineas:JSON.stringify(lineas),Importe:total.toFixed(2),Facturado:'NO'};
     await api({action:'saveAlbaran',data:JSON.stringify(alb)});
@@ -1763,15 +1886,16 @@ function switchTab(tab,el){
   });
   document.getElementById('scr-cliente-detail').classList.remove('active');
   document.getElementById('scr-tarifa-detail').classList.remove('active');
-  const labels={pedidos:null,clientes:'Clientes',albaranes:'Albaranes',productos:'Productos',tarifas:'Tarifas',ajustes:'Ajustes'};
+  const labels={pedidos:null,clientes:'Clientes',albaranes:'Albaranes',facturas:'Facturas',productos:'Productos',tarifas:'Tarifas',ajustes:'Ajustes'};
   if(tab==='pedidos'){setHdr(null,false,true);}
   else{setHdr(labels[tab]||tab,false,false);}
   if(tab==='ajustes') renderUsersList();
+  if(tab==='facturas') renderFacturas();
   prevScreen=null;
 }
 
 function showScreen(scr,prev){
-  const all=['scr-pedidos','scr-clientes','scr-albaranes','scr-productos','scr-tarifas','scr-ajustes','scr-cliente-detail','scr-tarifa-detail'];
+  const all=['scr-pedidos','scr-clientes','scr-albaranes','scr-facturas','scr-productos','scr-tarifas','scr-ajustes','scr-cliente-detail','scr-tarifa-detail'];
   all.forEach(s=>{
     document.getElementById(s).classList.toggle('active',s===scr);
   });
