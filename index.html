@@ -1662,7 +1662,7 @@ function buildPedidoForm(){
     <div class="f-lbl" style="margin-bottom:8px">Productos</div>
     <div class="prod-selector" id="prod-selector">${buildProdSelector()}</div>
     <div class="total-box">
-      <span class="total-lbl">Total sin IVA</span>
+      <span class="total-lbl" id="total-lbl">Total sin IVA</span>
       <div style="text-align:right"><div class="total-val" id="total-display">€0.00</div><div class="total-iva" id="total-iva">Con IVA (4%): €0.00</div></div>
     </div>
     <div class="f-grid">
@@ -1707,10 +1707,18 @@ function calcTotal(){return productos.reduce((s,p)=>s+(curQtys[p.ID]||0)*getPrec
 
 function updateTotal(){
   const t=calcTotal();
+  const lbl=document.getElementById('total-lbl');
   const el=document.getElementById('total-display');
   const elI=document.getElementById('total-iva');
-  if(el)el.textContent='€'+t.toFixed(2);
-  if(elI)elI.textContent='Con IVA (4%): €'+(t*1.04).toFixed(2);
+  if(curTipo==='particular'){
+    if(lbl)lbl.textContent='Total con IVA';
+    if(el)el.textContent='€'+(t*1.04).toFixed(2);
+    if(elI)elI.textContent='Sin IVA: €'+t.toFixed(2);
+  } else {
+    if(lbl)lbl.textContent='Total sin IVA';
+    if(el)el.textContent='€'+t.toFixed(2);
+    if(elI)elI.textContent='Con IVA (4%): €'+(t*1.04).toFixed(2);
+  }
 }
 
 function changeQty(prodId,delta){
