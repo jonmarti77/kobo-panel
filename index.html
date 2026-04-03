@@ -946,15 +946,39 @@ function renderAll(){
 function fmtDate(d){
   if(!d||d==='—'||d==='')return'—';
   const s=d.toString().trim();
-  if(s.includes('T'))return s.slice(0,10).split('-').reverse().join('/');
-  if(s.match(/^\d{4}-\d{2}-\d{2}$/))return s.split('-').reverse().join('/');
-  return s;
+  // Formato ISO: 2025-04-16 o 2025-04-16T...
+  if(s.match(/^\d{4}-\d{2}-\d{2}/))return s.slice(0,10).split('-').reverse().join('/');
+  // Formato DD/MM/YYYY ya correcto
+  if(s.match(/^\d{2}\/\d{2}\/\d{4}$/))return s;
+  // Formato Date largo de Google Sheets: "Thu Apr 16 2026 ..."
+  const parsed=new Date(s);
+  if(!isNaN(parsed.getTime())&&parsed.getFullYear()>1970){
+    const dd=String(parsed.getDate()).padStart(2,'0');
+    const mm=String(parsed.getMonth()+1).padStart(2,'0');
+    const yyyy=parsed.getFullYear();
+    return`${dd}/${mm}/${yyyy}`;
+  }
+  return'—';
 }
 function fmtDateShort(d){
   const f=fmtDate(d);
   if(f==='—')return'—';
   const p=f.split('/');
   return p[0]+'/'+p[1];
+}
+function fmtHora(h){
+  if(!h||h==='')return'';
+  const s=h.toString().trim();
+  // Ya en formato HH:MM
+  if(s.match(/^\d{1,2}:\d{2}$/))return s;
+  // Formato Date largo (Google Sheets devuelve la hora como fecha 1899)
+  const parsed=new Date(s);
+  if(!isNaN(parsed.getTime())){
+    const hh=String(parsed.getHours()).padStart(2,'0');
+    const mm=String(parsed.getMinutes()).padStart(2,'0');
+    return`${hh}:${mm}`;
+  }
+  return'';
 }
 function initials(n){return n.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();}
 function resumeLineas(l){if(!l||!l.length)return'—';return l.map(x=>`${x.qty} ${x.nombre}`).join(', ');}
@@ -991,7 +1015,7 @@ function renderPedidos(filter){
     return`<div class="card" onclick="openDetallePedido('${p.ID}')">
       <div class="card-top"><div><div class="card-name">${p.Cliente}</div><div class="card-sub">${p.ID}</div></div><span class="badge ${bE}">${lE}</span></div>
       <div class="card-body">${resumeLineas(p.Lineas)}</div>
-      <div class="card-foot"><div style="display:flex;gap:4px;flex-wrap:wrap">${tB}${aB}</div><div style="text-align:right"><div class="price-lbl">€${totalIva}</div><div class="time-lbl">${fmtDateShort(p.Fecha)} · ${p.Hora||''}</div></div></div>
+      <div class="card-foot"><div style="display:flex;gap:4px;flex-wrap:wrap">${tB}${aB}</div><div style="text-align:right"><div class="price-lbl">€${totalIva}</div><div class="time-lbl">${fmtDateShort(p.Fecha)}${fmtHora(p.Hora)?' · '+fmtHora(p.Hora):''}</div></div></div>
     </div>`;
   }).join('');
 }
@@ -1031,8 +1055,9 @@ function renderClientes(q){
 function filterClientes(q){renderClientes(q);}
 
 function getTarifaNombre(tid){
-  const rows=tarifas.filter(t=>t.TarifaID===tid);
-  return rows.length?rows[0].Nombre:'—';
+  // Busca en cualquier fila de esa tarifa, incluyendo placeholders
+  const row = tarifas.find(t => t.TarifaID === tid && t.Nombre && t.Nombre !== '');
+  return row ? row.Nombre : tid;
 }
 
 function openClienteDetail(id){
@@ -1042,19 +1067,21 @@ function openClienteDetail(id){
   showScreen('scr-cliente-detail','scr-clientes');
   setHdr(c.Nombre,true,false);
   const pendiente=parseFloat(c.Pendiente)||0;
-  const tRows=tarifas.filter(t=>t.TarifaID===c.TarifaID);
+  const tRows=tarifas.filter(t=>t.TarifaID===c.TarifaID&&t.ProductoID&&t.ProductoID!=='');
   const tarifaNombre=c.TarifaID?getTarifaNombre(c.TarifaID):'Sin tarifa';
-  const tarifaSection=tRows.length?`
+  const tarifaSection=c.TarifaID?(tRows.length?`
     <div class="detail-section">
       <h4>Tarifa pactada — ${tarifaNombre}</h4>
       ${tRows.map(t=>{
         const prod=productos.find(p=>p.ID===t.ProductoID);
         return`<div class="tarifa-item">
           <span class="tarifa-prod">${prod?prod.Nombre+' '+prod.Formato:t.ProductoID}</span>
-          <span class="tarifa-precio-val">€${parseFloat(t.Precio).toFixed(2)}</span>
+          <span class="tarifa-precio-val">€${parseFloat(t.Precio||0).toFixed(2)}</span>
         </div>`;
       }).join('')}
-    </div>`:'<div class="detail-section"><p style="font-size:13px;color:var(--text3)">Sin tarifa asignada. Asigna una desde el apartado Tarifas.</p></div>';
+    </div>`
+    :`<div class="detail-section"><h4>Tarifa pactada — ${tarifaNombre}</h4><p style="font-size:13px;color:var(--text3)">Sin productos añadidos aún.</p></div>`)
+    :'<div class="detail-section"><p style="font-size:13px;color:var(--text3)">Sin tarifa asignada. Asigna una desde el apartado Tarifas.</p></div>';
 
   document.getElementById('cliente-detail-body').innerHTML=`
     <div class="detail-section">
@@ -1337,20 +1364,24 @@ async function confirmarEliminarProducto(id){
 // =====================
 function renderTarifas(){
   const list=document.getElementById('tarifas-list');
-  const ids=[...new Set(tarifas.map(t=>t.TarifaID))];
+  // Obtener IDs únicos de tarifas (cualquier fila, incluyendo placeholders)
+  const ids=[...new Set(tarifas.map(t=>t.TarifaID).filter(Boolean))];
   const html=`
     <div class="tarifa-card" onclick="openTarifaDetail('__particulares__')">
       <div class="tarifa-card-top"><span class="tarifa-card-name">Particulares</span><span class="tarifa-card-count">${productos.filter(p=>p.Solo_Prof!=='SI'&&p.PVP&&p.PVP!=='').length} productos</span></div>
       <div class="tarifa-preview">Tarifa base del catálogo (PVP con IVA 4%)</div>
     </div>
     ${ids.map(tid=>{
-      const rows=tarifas.filter(t=>t.TarifaID===tid);
-      const nombre=rows[0]?.Nombre||tid;
+      const allRows=tarifas.filter(t=>t.TarifaID===tid);
+      // Solo las filas con producto real
+      const prodRows=allRows.filter(t=>t.ProductoID&&t.ProductoID!=='');
+      const nombre=getTarifaNombre(tid);
       const clientesAsig=clientes.filter(c=>c.TarifaID===tid).map(c=>c.Nombre).join(', ');
+      const preview=prodRows.slice(0,3).map(r=>{const p=productos.find(x=>x.ID===r.ProductoID);return p?p.Nombre+' '+p.Formato:'';}).filter(Boolean).join(' · ');
       return`<div class="tarifa-card" onclick="openTarifaDetail('${tid}')">
-        <div class="tarifa-card-top"><span class="tarifa-card-name">${nombre}</span><span class="tarifa-card-count">${rows.length} productos</span></div>
+        <div class="tarifa-card-top"><span class="tarifa-card-name">${nombre}</span><span class="tarifa-card-count">${prodRows.length} productos</span></div>
         ${clientesAsig?`<div class="tarifa-preview" style="margin-bottom:4px">Clientes: ${clientesAsig}</div>`:''}
-        <div class="tarifa-preview">${rows.slice(0,3).map(r=>{const p=productos.find(x=>x.ID===r.ProductoID);return p?p.Nombre+' '+p.Formato:'';}).filter(Boolean).join(' · ')}${rows.length>3?' · ...':''}</div>
+        <div class="tarifa-preview">${preview||'Sin productos aún — pulsa para añadir'}${prodRows.length>3?' · ...':''}</div>
       </div>`;
     }).join('')}`;
   list.innerHTML=html;
@@ -1374,25 +1405,29 @@ function renderTarifaDetail(tid){
       <p style="font-size:12px;color:var(--text3);text-align:center;padding:8px">Para modificar precios de particulares edita el catálogo de productos.</p>`;
     return;
   }
-  const rows=tarifas.filter(t=>t.TarifaID===tid);
-  const nombre=rows[0]?.Nombre||tid;
+  // Solo filas con producto real (excluir placeholder)
+  const rows=tarifas.filter(t=>t.TarifaID===tid&&t.ProductoID&&t.ProductoID!=='');
+  const nombre=getTarifaNombre(tid);
   setHdr(nombre,true,false);
   const usadaPor=clientes.filter(c=>c.TarifaID===tid).map(c=>c.Nombre).join(', ')||'Ningún cliente';
   document.getElementById('tarifa-detail-body').innerHTML=`
     <div class="detail-section">
       <h4>Productos y precios (sin IVA)</h4>
       <div id="tarifa-rows">
-        ${rows.map(r=>{
-          const p=productos.find(x=>x.ID===r.ProductoID);
-          return`<div class="tarifa-item" id="trow-${r.ProductoID}">
-            <span class="tarifa-prod">${p?p.Nombre+' '+p.Formato:r.ProductoID}</span>
-            <div class="tarifa-actions">
-              <span class="tarifa-precio-val" id="tpv-${r.ProductoID}">€${parseFloat(r.Precio).toFixed(2)}</span>
-              <button class="icon-btn" onclick="editarPrecioTarifa('${tid}','${r.ProductoID}')">✏️</button>
-              <button class="icon-btn" onclick="quitarProductoTarifa('${tid}','${r.ProductoID}')">🗑️</button>
-            </div>
-          </div>`;
-        }).join('')}
+        ${rows.length===0
+          ? `<p style="font-size:13px;color:var(--text3);padding:10px 0">Sin productos aún. Añade el primero.</p>`
+          : rows.map(r=>{
+              const p=productos.find(x=>x.ID===r.ProductoID);
+              return`<div class="tarifa-item" id="trow-${r.ProductoID}">
+                <span class="tarifa-prod">${p?p.Nombre+' '+p.Formato:r.ProductoID}</span>
+                <div class="tarifa-actions">
+                  <span class="tarifa-precio-val" id="tpv-${r.ProductoID}">€${parseFloat(r.Precio||0).toFixed(2)}</span>
+                  <button class="icon-btn" onclick="editarPrecioTarifa('${tid}','${r.ProductoID}')">✏️</button>
+                  <button class="icon-btn" onclick="quitarProductoTarifa('${tid}','${r.ProductoID}')">🗑️</button>
+                </div>
+              </div>`;
+            }).join('')
+        }
       </div>
       <button class="btn-new" style="margin-top:12px;width:100%;border-radius:var(--rad-sm)" onclick="openAnadirProductoTarifa('${tid}')">+ Añadir producto</button>
     </div>
@@ -1534,8 +1569,10 @@ function buildProdSelector(){
   if(!prods.length)return'<div style="padding:20px;text-align:center;font-size:13px;color:var(--text3)">Sin productos disponibles</div>';
   return prods.map(p=>{
     const precio=curTipo==='profesional'?(parseFloat(p._precio)||0):parseFloat(p.PVP)||0;
+    const precioMostrado=curTipo==='profesional'?precio:(precio*1.04);
+    const labelIva=curTipo==='profesional'?'sin IVA':'con IVA';
     return`<div class="prod-item">
-      <div class="prod-info"><div class="prod-name">${p.Nombre} <span style="font-size:11px;color:var(--text3)">${p.Formato}</span></div><div class="prod-price">€${precio.toFixed(2)} / ${p.Unidad||'ud'} (sin IVA)</div></div>
+      <div class="prod-info"><div class="prod-name">${p.Nombre} <span style="font-size:11px;color:var(--text3)">${p.Formato}</span></div><div class="prod-price">€${precioMostrado.toFixed(2)} / ${p.Unidad||'ud'} (${labelIva})</div></div>
       <div class="qty-ctrl"><button class="qty-btn" onclick="changeQty('${p.ID}',-1)">−</button><span class="qty-val" id="qty-${p.ID}">${curQtys[p.ID]||0}</span><button class="qty-btn" onclick="changeQty('${p.ID}',1)">+</button></div>
     </div>`;
   }).join('');
@@ -1626,7 +1663,7 @@ function openDetallePedido(id){
   if(!p)return;
   const totalIva=((parseFloat(p.Total)||0)*1.04).toFixed(2);
   openModal(`Pedido ${p.ID}`,`
-    <div style="margin-bottom:12px"><div style="font-size:16px;font-weight:700">${p.Cliente}</div><div style="font-size:13px;color:var(--text2)">${fmtDate(p.Fecha)} · ${p.Hora||''}</div></div>
+    <div style="margin-bottom:12px"><div style="font-size:16px;font-weight:700">${p.Cliente}</div><div style="font-size:13px;color:var(--text2)">${fmtDate(p.Fecha)}${fmtHora(p.Hora)?' · '+fmtHora(p.Hora):''}</div></div>
     <div style="font-size:13px;color:var(--text2);margin-bottom:12px;line-height:1.6">${resumeLineas(p.Lineas)}</div>
     <div class="total-box" style="margin-bottom:14px">
       <span class="total-lbl">Total</span>
@@ -1680,8 +1717,12 @@ function openEditarCliente(id){
 }
 
 function getTarifasOpts(selId=''){
-  const ids=[...new Set(tarifas.filter(t=>t.ProductoID).map(t=>t.TarifaID))];
-  return ids.map(tid=>{const n=getTarifaNombre(tid);return`<option value="${tid}" ${tid===selId?'selected':''}>${n}</option>`;}).join('');
+  // Obtener IDs únicos de todas las tarifas (incluyendo placeholders sin productos)
+  const ids=[...new Set(tarifas.map(t=>t.TarifaID).filter(Boolean))];
+  return ids.map(tid=>{
+    const n=getTarifaNombre(tid);
+    return`<option value="${tid}" ${tid===selId?'selected':''}>${n}</option>`;
+  }).join('');
 }
 
 async function saveCliente(){
